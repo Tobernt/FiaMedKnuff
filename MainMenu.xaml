@@ -1,0 +1,18 @@
+﻿<Page
+    x:Class="FiaMedKnuff.MainMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FiaMedKnuff"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="#4F2A00">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="Start Game" Click="StartGame_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Foreground="#FFFFFF"  HorizontalAlignment="Center" Margin="0,5,0,5" FontWeight="ExtraBold" FontSize="18" FocusVisualSecondaryBrush="Black" Background="#FF840000"/>
+            <Button Content="High Score" Click="HighScore_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" FontSize="18" FontWeight="ExtraBold" IsEnabled="False"/>
+            <Button Content="Rules" Click="Rules_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" IsEnabled="False" FontSize="18" FontWeight="ExtraBold"/>
+            <Button Content="Quit" Click="Quit_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" IsEnabled="False" FontSize="18" FontWeight="ExtraBold"/>
+        </StackPanel>
+    </Grid>
+</Page>
