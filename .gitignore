@@ -206,6 +206,7 @@ gallery.xml
 project.lock.json
 bin/*
 obj/*
+.vs/*
 Samples/WebSocket/server/WebSocketSampleScriptSettings
 Samples/StreamSocket/**/StreamSocketSampleScriptSettings.xml
 bin/x86/Debug/App.xbf
