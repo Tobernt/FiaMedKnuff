@@ -204,6 +204,8 @@ FakesAssemblies/
 # Custom ignores
 gallery.xml
 project.lock.json
+bin/*
+obj/*
 Samples/WebSocket/server/WebSocketSampleScriptSettings
 Samples/StreamSocket/**/StreamSocketSampleScriptSettings.xml
 bin/x86/Debug/App.xbf
