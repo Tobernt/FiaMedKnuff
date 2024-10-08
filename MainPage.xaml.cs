@@ -88,8 +88,6 @@ namespace FiaMedKnuff
             (5, 10),(5, 9), (5, 8), (5, 7),(5, 6), (5, 5) // Green finishing stretch
 		};
 
-
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -103,7 +101,7 @@ namespace FiaMedKnuff
         {
             // Roll the dice and display the result
             int diceRoll = RollDice();
-            DiceRollResult.Text = $"Player {currentPlayerIndex + 1} rolled a {diceRoll}";
+            DiceRollResult.Text = $"Player {IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
             //Checks if current player have the piece on the board or in the nest
             if (!hasStarted[currentPlayerIndex])
@@ -132,6 +130,11 @@ namespace FiaMedKnuff
             return random.Next(1, 7); // Roll a number between 1 and 6
         }
 
+        private int PlayerPathToNum(int playerIndex)
+        {
+            return 0;
+        }
+
         private void MovePlayer(int playerIndex, int steps)
         {
 
@@ -148,11 +151,67 @@ namespace FiaMedKnuff
                 position = path.Length - 1; // Stop at the last position
             }
 
+            for (int i = 0; i < playerPositions.Length; i++)
+            {
+                if (playerIndex == i) // make sure we're not checking players own piece
+                {
+                    continue;
+                }
+
+                if (playerPositions[i] >= GetPlayerPath(i).Length)
+                    playerPositions[i] = GetPlayerPath(i).Length - 1;
+
+                var (playerR, playerC) = GetPlayerPath(playerIndex)[position]; // get players piece row & cell
+                var (occupierR, occupierC) = GetPlayerPath(i)[playerPositions[i]]; // get other players piece row & cell
+                Debug.WriteLine($"Player {IndexToName(i)} with step {playerPositions[i]} is at {occupierR} {occupierC} | Current move: {playerR} {playerC}");
+
+                if (playerR == occupierR && playerC == occupierC)
+                {
+                    if (occupierC == 5 && occupierR == 5)
+                    {
+                        break;
+                    }
+
+                    Debug.WriteLine("Duplicate position found!");
+                    Debug.WriteLine($"{playerR} {playerC} == {occupierR} {occupierC}");
+
+                    // Set other player piece to 0
+                    var p = GetPlayerPath(i);
+                    var (nr, nc) = p[0];
+                    SetTokenPosition(GetPlayerToken(i), nr, nc);
+                    playerPositions[i] = 0;
+                }
+            }
+
             // Move the player token to the new position
             Ellipse playerToken = GetPlayerToken(playerIndex);
             var (newRow, newCol) = path[position];
             SetTokenPosition(playerToken, newRow, newCol);
-		}
+            if (newRow == 5 && newCol == 5)
+            {
+                HandlePlayerGoal(playerIndex); // Call the goal function when reaching (5,5)
+            }
+        }
+        private void HandlePlayerGoal(int playerIndex)
+        {
+            // You can customize this message or action based on the player's color.
+            string playerColor = IndexToName(playerIndex);
+            DiceRollResult.Text = $"Player {playerColor} has reached the goal!";
+
+            // You can add additional actions like disabling the player's movements, ending the game, etc.
+        }
+
+        private string IndexToName(int index)
+        {
+            switch (index)
+            {
+                case 0: return "Red"; // Red player
+                case 1: return "Blue"; // Blue player
+                case 2: return "Green"; // Green player
+                case 3: return "Yellow"; // Yellow player
+                default: return null;
+            }
+        }
 
         private Ellipse GetPlayerToken(int playerIndex)
         {
