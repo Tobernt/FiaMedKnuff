@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
@@ -11,13 +12,15 @@ namespace FiaMedKnuff
         private int[] playerPositions; // Holds player positions on the track for each player
         private int currentPlayerIndex;
         private int totalPlayers = 4;
+        private bool[] hasStarted;
         private Random random;
 
         // Paths for each player, defined as (row, column) positions on the grid.
         private readonly (int row, int col)[] RedPath = new (int row, int col)[]
         {
             // Starting from Red quadrant at (4, 0)
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
+            (4, 0), 
+            (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
             (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
             (0, 5), (0, 6),                          // Move Right in upper blue quadrant
             (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
@@ -34,15 +37,15 @@ namespace FiaMedKnuff
         private readonly (int row, int col)[] BluePath = new (int row, int col)[]
         {
             // Starting from Blue quadrant at (0, 6), moving down
-            (0, 6),                                  // Starting position
-            (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
+            (0, 6),
+            (1, 6), (2, 6), (3, 6), (4, 6),   // Move Down in blue quadrant
             (4, 7), (4, 8), (4, 9), (4, 10),         // Move Right in blue quadrant
             (5, 10), (6, 10),                        // Move Down into green quadrant
             (6, 9), (6, 8), (6, 7),                  // Move Left in green quadrant
             (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), // Move Down in green quadrant
             (10, 5), (10, 4),                        // Move left into yellow quadrant
             (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
-            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0),  // Move left in yellow quadrant
+            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),  // Move left in yellow quadrant
             (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
             (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),  // Move Up in Red quadrant
             (1,5), (2,5), (3,5), (4,5), (5,5)        // Blue finishing stretch
@@ -51,10 +54,10 @@ namespace FiaMedKnuff
 
         private readonly (int row, int col)[] YellowPath = new (int row, int col)[]
         {
-            // Starting from Yellow quadrant at (10, 5)
-            (10, 5), (10, 4),                        // Move left into yellow quadrant
+            // Starting from Yellow quadrant at (10, 4)
+            (10, 4),                                 // Move left into yellow quadrant
             (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
-            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0),  // Move left in yellow quadrant
+            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),  // Move left in yellow quadrant
             (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
             (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
             (0, 5), (0, 6),                          // Move Right in upper blue quadrant
@@ -70,19 +73,19 @@ namespace FiaMedKnuff
 
         private readonly (int row, int col)[] GreenPath = new (int row, int col)[]
         {
-        // Starting from Green quadrant at (4, 0)
-        (6, 10),                                 // Green starting pos
-        (6, 9), (6, 8), (6, 7),                  // Move Left in green quadrant
-        (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), // Move Down in green quadrant
-        (10, 5), (10, 4),                        // Move left into yellow quadrant
-        (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
-        (6, 4), (6, 3), (6, 2), (6, 1), (6, 0),  // Move left in yellow quadrant
-        (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
-        (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
-        (0, 5), (0, 6),                          // Move Right in upper blue quadrant
-        (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
-        (4, 7), (4, 8), (4, 9), (4, 10),         // Move Right in blue quadrant
-        (5, 10),(5, 9), (5, 8), (5, 7),(5, 6), (5, 5) // Green finishing stretch
+            // Starting from Green quadrant at (6, 10)
+            (6, 10), 
+            (6, 9), (6, 8), (6, 7),         // Move Left in green quadrant
+            (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), // Move Down in green quadrant
+            (10, 5), (10, 4),                        // Move left into yellow quadrant
+            (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
+            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0), (5, 0), // Move left in yellow quadrant
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
+            (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
+            (0, 5), (0, 6),                          // Move Right in upper blue quadrant
+            (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
+            (4, 7), (4, 8), (4, 9), (4, 10),         // Move Right in blue quadrant
+            (5, 10),(5, 9), (5, 8), (5, 7),(5, 6), (5, 5) // Green finishing stretch
 		};
 
         public MainPage()
@@ -90,7 +93,8 @@ namespace FiaMedKnuff
             this.InitializeComponent();
             playerPositions = new int[totalPlayers]; // Initialize positions for each player
             currentPlayerIndex = 0;
-            random = new Random();
+            hasStarted = new bool[totalPlayers];
+			random = new Random();
         }
 
         private void RollDice_Click(object sender, RoutedEventArgs e)
@@ -99,9 +103,24 @@ namespace FiaMedKnuff
             int diceRoll = RollDice();
             DiceRollResult.Text = $"Player {IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
-            // Move the current player based on the dice roll
-            MovePlayer(currentPlayerIndex, diceRoll);
-
+            //Checks if current player have the piece on the board or in the nest
+            if (!hasStarted[currentPlayerIndex])
+            {
+                if(diceRoll == 1 || diceRoll == 6)
+                {
+                    hasStarted[currentPlayerIndex] = true;
+					MovePlayer(currentPlayerIndex, diceRoll - 1);
+				}
+                else
+                {
+                    DiceRollResult.Text += " (Player must roll a 1 or 6 to start moving";
+                }
+            }
+            else
+            {
+				// Move the current player based on the dice roll
+				MovePlayer(currentPlayerIndex, diceRoll);
+			}
             // Move to the next player
             currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
         }
@@ -118,12 +137,13 @@ namespace FiaMedKnuff
 
         private void MovePlayer(int playerIndex, int steps)
         {
-            // Get the current position of the player
-            playerPositions[playerIndex] += steps;
-            int position = playerPositions[playerIndex];
 
-            // Get the path based on the player index
-            var path = GetPlayerPath(playerIndex);
+			// Get the current position of the player
+            playerPositions[playerIndex] += steps;
+            int position = playerPositions[playerIndex]; //Dice roll
+
+			// Get the path based on the player index
+			var path = GetPlayerPath(playerIndex);
 
             // Ensure the position is within the bounds of the path
             if (position >= path.Length)
@@ -167,7 +187,6 @@ namespace FiaMedKnuff
             Ellipse playerToken = GetPlayerToken(playerIndex);
             var (newRow, newCol) = path[position];
             SetTokenPosition(playerToken, newRow, newCol);
-
             if (newRow == 5 && newCol == 5)
             {
                 HandlePlayerGoal(playerIndex); // Call the goal function when reaching (5,5)
