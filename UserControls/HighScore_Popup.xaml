@@ -11,6 +11,7 @@
 
     <Grid Background="#350D0D">
         <TextBlock Text="Highscore" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" FontWeight="Medium"/>
+        <Button VerticalAlignment="Top" HorizontalAlignment="Right" Foreground="Black" Background="Red" Click="Exit_Highscore_Btn">X</Button>
 
         <Grid Background="#AC6715" Margin="40">
                 <Border BorderThickness="2" BorderBrush="Black">
@@ -20,11 +21,11 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Name:" Foreground="Black"/>
-                        <TextBlock Text="Moves:" Foreground="Black"/>
+                        <TextBlock Text="Name:" Foreground="Black" Margin="0,0,80,0" FontWeight="Medium"/>
+                        <TextBlock Text="Moves:" Foreground="Black" FontWeight="Medium"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <TextBlock Text="Hugo" Foreground="Black"/>
+                        <TextBlock Text="Hugo" Foreground="Black" Margin="0,0,80,0"/>
                         <TextBlock Text="Moves" Foreground="Black"/>
                     </StackPanel>
                 </Grid>

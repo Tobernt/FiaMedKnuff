@@ -8,7 +8,11 @@ namespace FiaMedKnuff
         public MainMenu()
         {
             this.InitializeComponent();
-        }
+			if (highScorePage != null)
+			{
+				highScorePage.MainMenuInstance = this;
+			}
+		}
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
         {
@@ -18,8 +22,9 @@ namespace FiaMedKnuff
 
         private void HighScore_Click(object sender, RoutedEventArgs e)
         {
+			highScorePage.Visibility = Visibility.Visible;
 
-        }
+		}
         private void Rules_Click(object sender, RoutedEventArgs e)
         {
 
