@@ -18,9 +18,9 @@ namespace FiaMedKnuff
         // Paths for each player, defined as (row, column) positions on the grid.
         private readonly (int row, int col)[] RedPath = new (int row, int col)[]
         {
-            // Starting from Red quadrant at (3, 0)
-            (3,0),
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
+            // Starting from Red quadrant at (4, 0)
+            (4, 0), 
+            (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
             (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
             (0, 5), (0, 6),                          // Move Right in upper blue quadrant
             (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
@@ -36,9 +36,9 @@ namespace FiaMedKnuff
 
         private readonly (int row, int col)[] BluePath = new (int row, int col)[]
         {
-            // Starting from Blue quadrant at (0, 5), moving down
-            (0, 5),                                   // Starting position
-            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
+            // Starting from Blue quadrant at (0, 6), moving down
+            (0, 6),
+            (1, 6), (2, 6), (3, 6), (4, 6),   // Move Down in blue quadrant
             (4, 7), (4, 8), (4, 9), (4, 10),         // Move Right in blue quadrant
             (5, 10), (6, 10),                        // Move Down into green quadrant
             (6, 9), (6, 8), (6, 7),                  // Move Left in green quadrant
@@ -54,8 +54,8 @@ namespace FiaMedKnuff
 
         private readonly (int row, int col)[] YellowPath = new (int row, int col)[]
         {
-            // Starting from Yellow quadrant at (10, 5)
-            (10, 5), (10, 4),              // Move left into yellow quadrant
+            // Starting from Yellow quadrant at (10, 4)
+            (10, 4),                                 // Move left into yellow quadrant
             (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
             (6, 4), (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),  // Move left in yellow quadrant
             (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
@@ -74,8 +74,8 @@ namespace FiaMedKnuff
         private readonly (int row, int col)[] GreenPath = new (int row, int col)[]
         {
             // Starting from Green quadrant at (6, 10)
-            (5,10),
-            (6, 10), (6, 9), (6, 8), (6, 7),         // Move Left in green quadrant
+            (6, 10), 
+            (6, 9), (6, 8), (6, 7),         // Move Left in green quadrant
             (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), // Move Down in green quadrant
             (10, 5), (10, 4),                        // Move left into yellow quadrant
             (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
@@ -109,7 +109,7 @@ namespace FiaMedKnuff
                 if(diceRoll == 1 || diceRoll == 6)
                 {
                     hasStarted[currentPlayerIndex] = true;
-					MovePlayer(currentPlayerIndex, diceRoll);
+					MovePlayer(currentPlayerIndex, diceRoll - 1);
 				}
                 else
                 {
@@ -187,7 +187,6 @@ namespace FiaMedKnuff
             Ellipse playerToken = GetPlayerToken(playerIndex);
             var (newRow, newCol) = path[position];
             SetTokenPosition(playerToken, newRow, newCol);
-		}
             if (newRow == 5 && newCol == 5)
             {
                 HandlePlayerGoal(playerIndex); // Call the goal function when reaching (5,5)
