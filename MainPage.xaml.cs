@@ -90,8 +90,8 @@ namespace FiaMedKnuff
         {
             this.InitializeComponent();
             playerPositions = new int[totalPlayers]; // Initialize positions for each player
-            currentPlayerIndex = 0;
             random = new Random();
+            currentPlayerIndex = random.Next(0, 4); // Randomizes initial starting player
         }
 
         private void RollDice_Click(object sender, RoutedEventArgs e)
