@@ -167,6 +167,19 @@ namespace FiaMedKnuff
             Ellipse playerToken = GetPlayerToken(playerIndex);
             var (newRow, newCol) = path[position];
             SetTokenPosition(playerToken, newRow, newCol);
+
+            if (newRow == 5 && newCol == 5)
+            {
+                HandlePlayerGoal(playerIndex); // Call the goal function when reaching (5,5)
+            }
+        }
+        private void HandlePlayerGoal(int playerIndex)
+        {
+            // You can customize this message or action based on the player's color.
+            string playerColor = IndexToName(playerIndex);
+            DiceRollResult.Text = $"Player {playerColor} has reached the goal!";
+
+            // You can add additional actions like disabling the player's movements, ending the game, etc.
         }
 
         private string IndexToName(int index)
