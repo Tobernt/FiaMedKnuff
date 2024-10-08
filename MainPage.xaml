@@ -174,5 +174,12 @@
             <Button Content="Roll Dice" Click="RollDice_Click" Width="200" Height="50" Background="#840000" BorderBrush="Black" BorderThickness="2"/>
             <TextBlock x:Name="DiceRollResult" FontSize="24" HorizontalAlignment="Center"/>
         </StackPanel>
+
+
+        <!-- Main Menu Button -->
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="50">
+            <Button Content="Menu" Click="Back_to_MainMenu" Width="150" Height="50" BorderBrush="Black" BorderThickness="2" Foreground="#FFFFFF" FontWeight="ExtraBold" FontSize="18" FocusVisualSecondaryBrush="Black" Background="#FF840000"/>
+        </StackPanel>
+
     </Grid>
 </Page>
