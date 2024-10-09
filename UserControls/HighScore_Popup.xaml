@@ -1,0 +1,38 @@
+﻿<UserControl
+    x:Class="FiaMedKnuff.UserControls.HighScore_Popup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:FiaMedKnuff.UserControls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="700"
+    d:DesignWidth="550">
+
+    <Grid Background="#350D0D" CornerRadius="10">
+        <TextBlock Text="Highscore" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="50" FontWeight="Medium"/>
+        <Button VerticalAlignment="Top" HorizontalAlignment="Right" Foreground="Black" Background="Red" Click="Exit_Highscore_Btn">X</Button>
+
+        <Grid Background="#AC6715" Margin="70" CornerRadius="10">
+                <Border BorderThickness="2" BorderBrush="Black">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Name:" Foreground="Black" Margin="0,0,80,0" FontWeight="Medium" FontSize="30"/>
+                        <TextBlock Text="Moves:" Foreground="Black" FontWeight="Medium" FontSize="30"/>
+                    </StackPanel>
+                    <!-- Later add from json file, highscores -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <TextBlock Text="Test" Foreground="Black" Margin="0,0,80,0" FontSize="25"/>
+                        <TextBlock Text="100" Foreground="Black" FontSize="25"/>
+                    </StackPanel>
+                </Grid>
+                </Border>
+            </Grid>
+        
+        
+    </Grid>
+</UserControl>
