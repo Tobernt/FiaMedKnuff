@@ -130,6 +130,9 @@
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveLoadManager.cs" />
+    <Compile Include="UserControls\dice.xaml.cs">
+      <DependentUpon>dice.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\HighScore_Popup.xaml.cs">
       <DependentUpon>HighScore_Popup.xaml</DependentUpon>
     </Compile>
@@ -154,6 +157,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MainMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\dice.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
