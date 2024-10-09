@@ -6,27 +6,27 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="700"
+    d:DesignWidth="550">
 
-    <Grid Background="#350D0D">
-        <TextBlock Text="Highscore" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" FontWeight="Medium"/>
+    <Grid Background="#350D0D" CornerRadius="10">
+        <TextBlock Text="Highscore" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="50" FontWeight="Medium"/>
         <Button VerticalAlignment="Top" HorizontalAlignment="Right" Foreground="Black" Background="Red" Click="Exit_Highscore_Btn">X</Button>
 
-        <Grid Background="#AC6715" Margin="40">
+        <Grid Background="#AC6715" Margin="70" CornerRadius="10">
                 <Border BorderThickness="2" BorderBrush="Black">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="70"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Name:" Foreground="Black" Margin="0,0,80,0" FontWeight="Medium"/>
-                        <TextBlock Text="Moves:" Foreground="Black" FontWeight="Medium"/>
+                        <TextBlock Text="Name:" Foreground="Black" Margin="0,0,80,0" FontWeight="Medium" FontSize="30"/>
+                        <TextBlock Text="Moves:" Foreground="Black" FontWeight="Medium" FontSize="30"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <TextBlock Text="Hugo" Foreground="Black" Margin="0,0,80,0"/>
-                        <TextBlock Text="Moves" Foreground="Black"/>
+                        <TextBlock Text="Test" Foreground="Black" Margin="0,0,80,0" FontSize="25"/>
+                        <TextBlock Text="100" Foreground="Black" FontSize="25"/>
                     </StackPanel>
                 </Grid>
                 </Border>
