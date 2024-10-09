@@ -244,5 +244,10 @@ namespace FiaMedKnuff
             Grid.SetRow(token, row);
             Grid.SetColumn(token, col);
         }
+
+        private void Back_to_MainMenu(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(MainMenu));
+        }
     }
 }
