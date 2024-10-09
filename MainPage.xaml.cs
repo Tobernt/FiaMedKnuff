@@ -101,7 +101,9 @@ namespace FiaMedKnuff
         {
             // Roll the dice and display the result
             int diceRoll = RollDice();
-            DiceRollResult.Text = $"Player {IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
+            MyDice.DiceVisualEffect(diceRoll);
+
+			DiceRollResult.Text = $"Player {IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
             //Checks if current player have the piece on the board or in the nest
             if (!hasStarted[currentPlayerIndex])
@@ -249,5 +251,10 @@ namespace FiaMedKnuff
         {
             Frame.Navigate(typeof(MainMenu));
         }
-    }
+
+		private void Grid_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+		{
+
+		}
+	}
 }
