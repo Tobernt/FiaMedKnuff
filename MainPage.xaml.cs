@@ -184,7 +184,7 @@ namespace FiaMedKnuff
             }
 
             // Move the player token to the new position
-            Ellipse playerToken = GetPlayerToken(playerIndex);
+            Grid playerToken = GetPlayerToken(playerIndex);
             var (newRow, newCol) = path[position];
             SetTokenPosition(playerToken, newRow, newCol);
             if (newRow == 5 && newCol == 5)
@@ -213,7 +213,7 @@ namespace FiaMedKnuff
             }
         }
 
-        private Ellipse GetPlayerToken(int playerIndex)
+        private Grid GetPlayerToken(int playerIndex)
         {
             switch (playerIndex)
             {
@@ -238,7 +238,7 @@ namespace FiaMedKnuff
         }
 
         // Method to move the player's token on the grid
-        private void SetTokenPosition(Ellipse token, int row, int col)
+        private void SetTokenPosition(Grid token, int row, int col)
         {
             // Set the player's token to the new row and column
             Grid.SetRow(token, row);

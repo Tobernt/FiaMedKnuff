@@ -157,15 +157,48 @@
                 <!-- Center goal zone (for all players) -->
                 <Ellipse Grid.Row="5" Grid.Column="5" Width="50" Height="50" Fill="Black" Stroke="Black"/>
 
+                
+                
+                
+                
                 <!-- Player Tokens -->
+                
                 <!-- Red player token -->
-                <Ellipse x:Name="Player1Token" Width="35" Height="35" Fill="Red" Grid.Row="0" Grid.Column="0" Stroke="Black" StrokeThickness="3"/>
+                <!--<Ellipse x:Name="Player1Token" Width="35" Height="35" Fill="Red" Grid.Row="0" Grid.Column="0" Stroke="Black" StrokeThickness="3"/>-->
+                <Grid x:Name="Player1Token" Grid.Row="0" Grid.Column="0">
+                    <Rectangle Width="22" Height="25" Fill="#470000" Stroke="Black" StrokeThickness="3" RadiusX="3" RadiusY="15" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Ellipse Width="20" Height="20" Fill="Red" Stroke="Black" StrokeThickness="3" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                </Grid>
+
+
+                
+                
                 <!-- Blue player token -->
-                <Ellipse x:Name="Player2Token" Width="35" Height="35" Fill="Blue" Grid.Row="0" Grid.Column="9" Stroke="Black" StrokeThickness="3"/>
-                <!-- Yellow player token -->
-                <Ellipse x:Name="Player3Token" Width="35" Height="35" Fill="Green" Grid.Row="9" Grid.Column="9" Stroke="Black" StrokeThickness="3"/>
+                <!--<Ellipse x:Name="Player2Token" Width="35" Height="35" Fill="Blue" Grid.Row="0" Grid.Column="9" Stroke="Black" StrokeThickness="3"/>-->
+                <Grid x:Name="Player2Token" Grid.Row="0" Grid.Column="9">
+                    <Rectangle Width="22" Height="25" Fill="#002147" Stroke="Black" StrokeThickness="3" RadiusX="3" RadiusY="15" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Ellipse Width="20" Height="20" Fill="Blue" Stroke="Black" StrokeThickness="3" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                </Grid>
+
+
+
+
                 <!-- Green player token -->
-                <Ellipse x:Name="Player4Token" Width="35" Height="35" Fill="Yellow" Grid.Row="9" Grid.Column="0" Stroke="Black" StrokeThickness="3"/>
+                <!--<Ellipse x:Name="Player3Token" Width="35" Height="35" Fill="Green" Grid.Row="9" Grid.Column="9" Stroke="Black" StrokeThickness="3"/>-->
+                <Grid x:Name="Player3Token" Grid.Row="9" Grid.Column="9">
+                    <Rectangle Width="22" Height="25" Fill="#004702" Stroke="Black" StrokeThickness="3" RadiusX="3" RadiusY="15" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Ellipse Width="20" Height="20" Fill="Green" Stroke="Black" StrokeThickness="3" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                </Grid>
+                
+                
+                
+                
+                <!-- Yellow player token -->
+                <!--<Ellipse x:Name="Player4Token" Width="35" Height="35" Fill="Yellow" Grid.Row="9" Grid.Column="0" Stroke="Black" StrokeThickness="3"/>-->
+                <Grid x:Name="Player4Token" Grid.Row="9" Grid.Column="0">
+                    <Rectangle Width="22" Height="25" Fill="#473C00" Stroke="Black" StrokeThickness="3" RadiusX="3" RadiusY="15" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Ellipse Width="20" Height="20" Fill="Yellow" Stroke="Black" StrokeThickness="3" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                </Grid>
             </Grid>
         </Grid>
 
