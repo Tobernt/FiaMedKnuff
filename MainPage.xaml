@@ -44,9 +44,9 @@
                 <Ellipse Grid.Row="1" Grid.Column="0" Width="50" Height="50" Fill="Red"/>
                 <Ellipse Grid.Row="1" Grid.Column="1" Width="50" Height="50" Fill="Red"/>
                 <!-- Dice for red -->
-                <Button Click="RollDice_Click" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10">
+                <Button x:Name="RedDiceBtn" Click="RollDice_Click" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10">
                     <Grid>
-                        <userControls:Dice x:Name="MyDice"></userControls:Dice>
+                        <userControls:Dice x:Name="RedDice"></userControls:Dice>
                     </Grid>
                 </Button>
 
@@ -56,9 +56,9 @@
                 <Ellipse Grid.Row="1" Grid.Column="9" Width="50" Height="50" Fill="Blue"/>
                 <Ellipse Grid.Row="1" Grid.Column="10" Width="50" Height="50" Fill="Blue"/>
                 <!-- dice for Blue-->
-                <Button Grid.Row="2" Grid.Column="7" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10">
+                <Button x:Name="BlueDiceBtn" Click="RollDice_Click" Grid.Row="2" Grid.Column="7" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10">
                     <Grid >
-                        <userControls:Dice></userControls:Dice>
+                        <userControls:Dice x:Name="BlueDice"></userControls:Dice>
                     </Grid>
                 </Button>
 
@@ -68,9 +68,9 @@
                 <Ellipse Grid.Row="9" Grid.Column="1" Width="50" Height="50" Fill="Yellow"/>
                 <Ellipse Grid.Row="10" Grid.Column="1" Width="50" Height="50" Fill="Yellow"/>
                 <!-- dice for Green-->
-                <Button Grid.Row="7" Grid.Column="7" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10">
+                <Button x:Name="GreenDiceBtn" IsEnabled="False" Click="RollDice_Click" Grid.Row="7" Grid.Column="7" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10">
                     <Grid >
-                        <userControls:Dice></userControls:Dice>
+                        <userControls:Dice x:Name="GreenDice"></userControls:Dice>
                     </Grid>
                 </Button>
 
@@ -80,9 +80,9 @@
                 <Ellipse Grid.Row="10" Grid.Column="9" Width="50" Height="50" Fill="Green"/>
                 <Ellipse Grid.Row="10" Grid.Column="10" Width="50" Height="50" Fill="Green"/>
                 <!-- dice for Yellow-->
-                <Button Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10">
+                <Button x:Name="YellowDiceBtn" Click="RollDice_Click" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10">
                     <Grid >
-                        <userControls:Dice></userControls:Dice>
+                        <userControls:Dice x:Name="YellowDice"></userControls:Dice>
                     </Grid>
                 </Button>
 
@@ -194,6 +194,12 @@
                 <Ellipse x:Name="Player4Token" Width="35" Height="35" Fill="Yellow" Grid.Row="9" Grid.Column="0" Stroke="Black" StrokeThickness="3"/>
             </Grid>
         </Grid>
+
+        <!-- Temp: Result text -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10,0,0">
+            <TextBlock x:Name="DiceRollResult" FontSize="24" HorizontalAlignment="Center"/>
+        </StackPanel>
+
 
         <!-- Main Menu Button -->
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="50">

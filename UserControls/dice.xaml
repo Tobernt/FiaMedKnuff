@@ -33,7 +33,7 @@
                 <Ellipse x:Name="dotThree" Width="15" Height="15" Fill="Black"/>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="1">
-                <Ellipse x:Name="dotFour" Width="15" Height="15" Fill="Black"/>
+                <Ellipse x:Name="dotFour" Width="15" Height="15" Fill="Black" Visibility="Collapsed"/>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="2">
                 <Ellipse x:Name="dotFive" Width="15" Height="15" Fill="Black"/>

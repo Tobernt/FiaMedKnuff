@@ -94,14 +94,48 @@ namespace FiaMedKnuff
             playerPositions = new int[totalPlayers]; // Initialize positions for each player
             random = new Random();
             currentPlayerIndex = random.Next(0, 4); // Randomizes initial starting player
-            hasStarted = new bool[totalPlayers];
+			DiceIsEnable(currentPlayerIndex);
+			hasStarted = new bool[totalPlayers];
+        }
+
+        private void DiceIsEnable(int currentPlayerIndex)
+        {
+            //Enables only one dice at the time
+            if(currentPlayerIndex == 0)
+            {
+                RedDiceBtn.IsEnabled = true;
+                BlueDiceBtn.IsEnabled = false;
+                GreenDiceBtn.IsEnabled = false;
+                YellowDiceBtn.IsEnabled=false;
+            }
+            if(currentPlayerIndex == 1)
+            {
+				RedDiceBtn.IsEnabled = false;
+				BlueDiceBtn.IsEnabled = true;
+				GreenDiceBtn.IsEnabled = false;
+				YellowDiceBtn.IsEnabled = false;
+			}
+            if(currentPlayerIndex == 2)
+            {
+				RedDiceBtn.IsEnabled = false;
+				BlueDiceBtn.IsEnabled = false;
+				GreenDiceBtn.IsEnabled = true;
+				YellowDiceBtn.IsEnabled = false;
+			}
+            if(currentPlayerIndex == 3)
+            {
+				RedDiceBtn.IsEnabled = false;
+				BlueDiceBtn.IsEnabled = false;
+				GreenDiceBtn.IsEnabled = false;
+				YellowDiceBtn.IsEnabled = true;
+			}
         }
 
         private void RollDice_Click(object sender, RoutedEventArgs e)
         {
             // Roll the dice and display the result
             int diceRoll = RollDice();
-            MyDice.DiceVisualEffect(diceRoll);
+			RedDice.DiceVisualEffect(diceRoll);
 
 			DiceRollResult.Text = $"Player {IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
@@ -125,7 +159,8 @@ namespace FiaMedKnuff
 			}
             // Move to the next player
             currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
-        }
+			DiceIsEnable(currentPlayerIndex);
+		}
 
         private int RollDice()
         {
@@ -251,10 +286,5 @@ namespace FiaMedKnuff
         {
             Frame.Navigate(typeof(MainMenu));
         }
-
-		private void Grid_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-		{
-
-		}
-	}
+    }
 }
