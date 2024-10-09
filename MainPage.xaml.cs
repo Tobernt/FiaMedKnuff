@@ -100,35 +100,16 @@ namespace FiaMedKnuff
 
         private void DiceIsEnable(int currentPlayerIndex)
         {
-            //Enables only one dice at the time
-            if(currentPlayerIndex == 0)
+			//Enables only one dice at the time
+			Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
+            foreach (Button button in diceButtons)
             {
-                RedDiceBtn.IsEnabled = true;
-                BlueDiceBtn.IsEnabled = false;
-                GreenDiceBtn.IsEnabled = false;
-                YellowDiceBtn.IsEnabled=false;
+                button.IsEnabled = false;
             }
-            if(currentPlayerIndex == 1)
+            if(currentPlayerIndex >= 0 && currentPlayerIndex < diceButtons.Length) 
             {
-				RedDiceBtn.IsEnabled = false;
-				BlueDiceBtn.IsEnabled = true;
-				GreenDiceBtn.IsEnabled = false;
-				YellowDiceBtn.IsEnabled = false;
-			}
-            if(currentPlayerIndex == 2)
-            {
-				RedDiceBtn.IsEnabled = false;
-				BlueDiceBtn.IsEnabled = false;
-				GreenDiceBtn.IsEnabled = true;
-				YellowDiceBtn.IsEnabled = false;
-			}
-            if(currentPlayerIndex == 3)
-            {
-				RedDiceBtn.IsEnabled = false;
-				BlueDiceBtn.IsEnabled = false;
-				GreenDiceBtn.IsEnabled = false;
-				YellowDiceBtn.IsEnabled = true;
-			}
+                diceButtons[currentPlayerIndex].IsEnabled = true;
+            }
         }
 
         private void RollDice_Click(object sender, RoutedEventArgs e)
