@@ -26,14 +26,27 @@ namespace FiaMedKnuff.UserControls
 		}
 		public async void ThrowDiceVisual(int diceThrow)
 		{
+			// Visual dice throw
 			Random random = new Random();
-
-			for(int i = 1; i < 7; i++)
+			int rndPrevious = 0;
+			int rnd = 0;
+			for (int i = 1; i < 7; i++)
 			{
-				int rnd = random.Next(1,7);
+				while (true)
+				{
+					// The dice does not show same numbers twice in a row
+					rnd = random.Next(1,7);
+					if (rnd != rndPrevious)
+					{
+						rndPrevious = rnd;
+						break;
+					}
+				}
+				// Delay so that the user can see that the dice is being randomized
 				await Task.Delay(100);
 				ShowDiceNum(rnd);
 			}
+			// Shows the final dice result
 			ShowDiceNum(diceThrow);
 		}
 		public void ShowDiceNum(int diceThrow)

@@ -114,9 +114,10 @@ namespace FiaMedKnuff
 
         private void RollDice_Click(object sender, RoutedEventArgs e)
         {
-            // Roll the dice and display the result
+            // Rolls the dice
             int diceRoll = RollDice();
 
+            // Displays the rolled dice on the current players turn
 			Button clickedButton = sender as Button;
             if (clickedButton == RedDiceBtn) RedDice.ThrowDiceVisual(diceRoll); 
 			if (clickedButton == BlueDiceBtn) BlueDice.ThrowDiceVisual(diceRoll);
