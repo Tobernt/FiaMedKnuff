@@ -25,9 +25,7 @@
                         <TextBlock Text="Moves:" Foreground="Black" FontWeight="Medium" FontSize="30"/>
                     </StackPanel>
                     <!-- Later add from json file, highscores -->
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <TextBlock Text="Test" Foreground="Black" Margin="0,0,80,0" FontSize="25"/>
-                        <TextBlock Text="100" Foreground="Black" FontSize="25"/>
+                    <StackPanel x:Name="HighScoreList" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
                     </StackPanel>
                 </Grid>
                 </Border>

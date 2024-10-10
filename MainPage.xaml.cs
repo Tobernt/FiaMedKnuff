@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
+using FiaMedKnuff;
 
 namespace FiaMedKnuff
 {
@@ -14,13 +16,14 @@ namespace FiaMedKnuff
         private int totalPlayers = 4;
         private bool[] hasStarted;
         private Random random;
-
+        private int[] playerScores;
+        
         // Paths for each player, defined as (row, column) positions on the grid.
         private readonly (int row, int col)[] RedPath = new (int row, int col)[]
         {
             // Starting from Red quadrant at (4, 0)
             (4, 0), 
-            (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
+            (4, 1), (4, 2), (4, 3), (4, 4),          // Move right in Red quadrant
             (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
             (0, 5), (0, 6),                          // Move Right in upper blue quadrant
             (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
@@ -91,7 +94,9 @@ namespace FiaMedKnuff
         public MainPage()
         {
             this.InitializeComponent();
+
             playerPositions = new int[totalPlayers]; // Initialize positions for each player
+            playerScores = new int[totalPlayers];
             random = new Random();
             currentPlayerIndex = random.Next(0, 4); // Randomizes initial starting player
             hasStarted = new bool[totalPlayers];
@@ -151,6 +156,9 @@ namespace FiaMedKnuff
                 position = path.Length - 1; // Stop at the last position
             }
 
+            // Update moves for player
+            playerScores[playerIndex] += 1;
+
             for (int i = 0; i < playerPositions.Length; i++)
             {
                 if (playerIndex == i) // make sure we're not checking players own piece
@@ -199,6 +207,7 @@ namespace FiaMedKnuff
             DiceRollResult.Text = $"Player {playerColor} has reached the goal!";
 
             // You can add additional actions like disabling the player's movements, ending the game, etc.
+            PlayerScoreManager.SavePlayerScore(new PlayerScore { Name = playerColor, Moves = playerScores[playerIndex] });
         }
 
         private string IndexToName(int index)

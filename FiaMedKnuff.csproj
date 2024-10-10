@@ -128,6 +128,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerScoreManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveLoadManager.cs" />
     <Compile Include="UserControls\HighScore_Popup.xaml.cs">
@@ -165,6 +166,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json">
+      <Version>8.0.5</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
