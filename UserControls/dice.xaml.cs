@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -23,9 +24,21 @@ namespace FiaMedKnuff.UserControls
 		{
 			this.InitializeComponent();
 		}
-
-		public void DiceVisualEffect(int diceThrow)
+		public async void ThrowDiceVisual(int diceThrow)
 		{
+			Random random = new Random();
+
+			for(int i = 1; i < 7; i++)
+			{
+				int rnd = random.Next(1,7);
+				await Task.Delay(100);
+				ShowDiceNum(rnd);
+			}
+			ShowDiceNum(diceThrow);
+		}
+		public void ShowDiceNum(int diceThrow)
+		{
+
 			if (diceThrow == 1) DiceThrowOne();
 			if (diceThrow == 2) DiceThrowTwo();
 			if (diceThrow == 3) DiceThrowThree();

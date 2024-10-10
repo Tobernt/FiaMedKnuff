@@ -116,9 +116,13 @@ namespace FiaMedKnuff
         {
             // Roll the dice and display the result
             int diceRoll = RollDice();
-			RedDice.DiceVisualEffect(diceRoll);
 
-			DiceRollResult.Text = $"Player {IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
+			Button clickedButton = sender as Button;
+            if (clickedButton == RedDiceBtn) RedDice.ThrowDiceVisual(diceRoll); 
+			if (clickedButton == BlueDiceBtn) BlueDice.ThrowDiceVisual(diceRoll);
+            if (clickedButton == GreenDiceBtn) GreenDice.ThrowDiceVisual(diceRoll);
+            if (clickedButton == YellowDiceBtn) YellowDice.ThrowDiceVisual(diceRoll);
+			DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
             //Checks if current player have the piece on the board or in the nest
             if (!hasStarted[currentPlayerIndex])
