@@ -11,13 +11,12 @@ namespace FiaMedKnuff
 {
     public sealed partial class MainPage : Page
     {
-        private int[] playerPositions; // Holds player positions on the track for each player
+        private Player[] players; // use gamelogic class later
         private int currentPlayerIndex;
         private int totalPlayers = 4;
-        private bool[] hasStarted;
         private Random random;
-        private int[] playerScores;
-        
+        DateTime startTime = DateTime.Now;
+
         // Paths for each player, defined as (row, column) positions on the grid.
         private readonly (int row, int col)[] RedPath = new (int row, int col)[]
         {
@@ -95,25 +94,31 @@ namespace FiaMedKnuff
         {
             this.InitializeComponent();
 
-            playerPositions = new int[totalPlayers]; // Initialize positions for each player
-            playerScores = new int[totalPlayers];
+            Player red = new Player("red"); // move to gamelogic later
+            Player blue = new Player("blue");
+            Player green = new Player("green");
+            Player yellow = new Player("yellow");
+            DateTime startTime = DateTime.Now;
+            players = new Player[] { red, blue, green, yellow };
             random = new Random();
             currentPlayerIndex = random.Next(0, 4); // Randomizes initial starting player
-            hasStarted = new bool[totalPlayers];
+            //hasStarted = new bool[totalPlayers];
+
         }
 
         private void RollDice_Click(object sender, RoutedEventArgs e)
         {
             // Roll the dice and display the result
+
             int diceRoll = RollDice();
             DiceRollResult.Text = $"Player {IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
             //Checks if current player have the piece on the board or in the nest
-            if (!hasStarted[currentPlayerIndex])
+            if (!players[currentPlayerIndex].HasStarted)
             {
                 if(diceRoll == 1 || diceRoll == 6)
                 {
-                    hasStarted[currentPlayerIndex] = true;
+                    players[currentPlayerIndex].HasStarted = true;
 					MovePlayer(currentPlayerIndex, diceRoll - 1);
 				}
                 else
@@ -144,8 +149,8 @@ namespace FiaMedKnuff
         {
 
 			// Get the current position of the player
-            playerPositions[playerIndex] += steps;
-            int position = playerPositions[playerIndex]; //Dice roll
+            players[playerIndex].Position += steps;
+            int position = players[playerIndex].Position; //Dice roll
 
 			// Get the path based on the player index
 			var path = GetPlayerPath(playerIndex);
@@ -157,21 +162,21 @@ namespace FiaMedKnuff
             }
 
             // Update moves for player
-            playerScores[playerIndex] += 1;
+            players[playerIndex].Moves += 1;
 
-            for (int i = 0; i < playerPositions.Length; i++)
+            for (int i = 0; i < players.Length; i++)
             {
                 if (playerIndex == i) // make sure we're not checking players own piece
                 {
                     continue;
                 }
 
-                if (playerPositions[i] >= GetPlayerPath(i).Length)
-                    playerPositions[i] = GetPlayerPath(i).Length - 1;
+                if (players[i].Position >= GetPlayerPath(i).Length)
+                    players[i].Position = GetPlayerPath(i).Length - 1;
 
                 var (playerR, playerC) = GetPlayerPath(playerIndex)[position]; // get players piece row & cell
-                var (occupierR, occupierC) = GetPlayerPath(i)[playerPositions[i]]; // get other players piece row & cell
-                Debug.WriteLine($"Player {IndexToName(i)} with step {playerPositions[i]} is at {occupierR} {occupierC} | Current move: {playerR} {playerC}");
+                var (occupierR, occupierC) = GetPlayerPath(i)[players[i].Position]; // get other players piece row & cell
+                Debug.WriteLine($"Player {IndexToName(i)} with step {players[i].Position} is at {occupierR} {occupierC} | Current move: {playerR} {playerC} {players[playerIndex].Moves}");
 
                 if (playerR == occupierR && playerC == occupierC)
                 {
@@ -187,7 +192,7 @@ namespace FiaMedKnuff
                     var p = GetPlayerPath(i);
                     var (nr, nc) = p[0];
                     SetTokenPosition(GetPlayerToken(i), nr, nc);
-                    playerPositions[i] = 0;
+                    players[i].Position = 0;
                 }
             }
 
@@ -200,6 +205,7 @@ namespace FiaMedKnuff
                 HandlePlayerGoal(playerIndex); // Call the goal function when reaching (5,5)
             }
         }
+
         private void HandlePlayerGoal(int playerIndex)
         {
             // You can customize this message or action based on the player's color.
@@ -207,7 +213,13 @@ namespace FiaMedKnuff
             DiceRollResult.Text = $"Player {playerColor} has reached the goal!";
 
             // You can add additional actions like disabling the player's movements, ending the game, etc.
-            PlayerScoreManager.SavePlayerScore(new PlayerScore { Name = playerColor, Moves = playerScores[playerIndex] });
+            TimeSpan elapsedTime = DateTime.Now - startTime;
+            string formattedTime = string.Format("{0}:{1:D2}", (int)elapsedTime.TotalMinutes, elapsedTime.Seconds);
+
+            if (!players[playerIndex].HasWon)
+                PlayerScoreManager.SavePlayerScore(new PlayerScore { Name = playerColor, Moves = players[playerIndex].Moves, Time = formattedTime });
+
+            players[playerIndex].HasWon = true;
         }
 
         private string IndexToName(int index)

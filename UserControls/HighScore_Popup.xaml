@@ -21,8 +21,9 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Name:" Foreground="Black" Margin="0,0,80,0" FontWeight="Medium" FontSize="30"/>
-                        <TextBlock Text="Moves:" Foreground="Black" FontWeight="Medium" FontSize="30"/>
+                        <TextBlock Text="Name:" Foreground="Black" Margin="0,0,40,0" FontWeight="Medium" FontSize="30"/>
+                        <TextBlock Text="Moves:" Foreground="Black" Margin="0,0,40,0" FontWeight="Medium" FontSize="30"/>
+                        <TextBlock Text="Time:" Foreground="Black" FontWeight="Medium" FontSize="30"/>
                     </StackPanel>
                     <!-- Later add from json file, highscores -->
                     <StackPanel x:Name="HighScoreList" Grid.Row="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">

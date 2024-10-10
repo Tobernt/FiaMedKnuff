@@ -47,25 +47,30 @@ namespace FiaMedKnuff.UserControls
 
             var highScores = PlayerScoreManager.LoadTopPlayerScores();
 
-            Debug.WriteLine(highScores);
+            Debug.WriteLine(highScores); 
 
             foreach (var score in highScores)
             {
-                // Create a horizontal StackPanel for each high score
-                var stackPanel = new StackPanel
+                // Create a Grid for each high score entry
+                var grid = new Grid
                 {
-                    Orientation = Orientation.Horizontal,
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Top
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Margin = new Thickness(0, 10, 0, 10) // Equal vertical spacing between rows
                 };
+
+                // Define three columns for Name, Score, and Time
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(100) }); // Fixed width for Name
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(150) }); // Fixed width for Score
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(100) }); // Fixed width for Time
 
                 // Create TextBlock for the player's name
                 var nameTextBlock = new TextBlock
                 {
                     Text = score.Name,
                     Foreground = new SolidColorBrush(Windows.UI.Colors.Black),
-                    Margin = new Thickness(0, 0, 80, 0),
-                    FontSize = 25
+                    FontSize = 25,
+                    HorizontalAlignment = HorizontalAlignment.Left
                 };
 
                 // Create TextBlock for the player's score
@@ -73,17 +78,31 @@ namespace FiaMedKnuff.UserControls
                 {
                     Text = score.Moves.ToString(),
                     Foreground = new SolidColorBrush(Windows.UI.Colors.Black),
-                    FontSize = 25
+                    FontSize = 25,
+                    HorizontalAlignment = HorizontalAlignment.Center
                 };
 
-                // Add the TextBlocks to the StackPanel
-                stackPanel.Children.Add(nameTextBlock);
-                stackPanel.Children.Add(scoreTextBlock);
+                // Create TextBlock for the player's time
+                var timeTextBlock = new TextBlock
+                {
+                    Text = score.Time,
+                    Foreground = new SolidColorBrush(Windows.UI.Colors.Black),
+                    FontSize = 25,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
 
-                // Add the StackPanel to the main StackPanel
-                HighScoreList.Children.Add(stackPanel);
+                // Add the TextBlocks to the Grid
+                Grid.SetColumn(nameTextBlock, 0); // Name in first column
+                Grid.SetColumn(scoreTextBlock, 1); // Score in second column
+                Grid.SetColumn(timeTextBlock, 2); // Time in third column
+
+                grid.Children.Add(nameTextBlock);
+                grid.Children.Add(scoreTextBlock);
+                grid.Children.Add(timeTextBlock);
+
+                // Add the Grid to the main StackPanel
+                HighScoreList.Children.Add(grid);
             }
         }
-
     }
 }

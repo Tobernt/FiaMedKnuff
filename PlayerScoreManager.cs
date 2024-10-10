@@ -11,6 +11,7 @@ namespace FiaMedKnuff
     {
         public string Name { get; set; }
         public int Moves { get; set; }
+        public string Time {  get; set; }
     }
 
     public static class PlayerScoreManager
@@ -31,7 +32,6 @@ namespace FiaMedKnuff
         // return top 10 PlayerScores sorted by moves (ascending)
         public static List<PlayerScore> LoadTopPlayerScores()
         {
-            List<PlayerScore> playerScores = LoadAllPlayerScores();
             return LoadAllPlayerScores().OrderBy(ps => ps.Moves).Take(10).ToList();
         }
 
