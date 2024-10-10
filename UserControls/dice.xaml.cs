@@ -51,7 +51,7 @@ namespace FiaMedKnuff.UserControls
 		}
 		public void ShowDiceNum(int diceThrow)
 		{
-
+			// Displays the dice depending on what the value of the diceThrow
 			if (diceThrow == 1) DiceThrowOne();
 			if (diceThrow == 2) DiceThrowTwo();
 			if (diceThrow == 3) DiceThrowThree();
@@ -62,6 +62,7 @@ namespace FiaMedKnuff.UserControls
 
 		private void DiceThrowOne()
 		{
+			//Dice value 1
 			dotOne.Visibility = Visibility.Collapsed;
 			dotTwo.Visibility = Visibility.Collapsed;
 			dotThree.Visibility = Visibility.Collapsed;
@@ -72,6 +73,7 @@ namespace FiaMedKnuff.UserControls
 		}
 		private void DiceThrowTwo()
 		{
+			//Dice value 2
 			dotOne.Visibility = Visibility.Collapsed;
 			dotTwo.Visibility = Visibility.Visible;
 			dotThree.Visibility = Visibility.Collapsed;
@@ -82,6 +84,7 @@ namespace FiaMedKnuff.UserControls
 		}
 		private void DiceThrowThree()
 		{
+			//Dice value 3
 			dotOne.Visibility = Visibility.Visible;
 			dotTwo.Visibility = Visibility.Collapsed;
 			dotThree.Visibility = Visibility.Collapsed;
@@ -92,6 +95,7 @@ namespace FiaMedKnuff.UserControls
 		}
 		private void DiceThrowFour()
 		{
+			//Dice value 4
 			dotOne.Visibility = Visibility.Visible;
 			dotTwo.Visibility = Visibility.Visible;
 			dotThree.Visibility = Visibility.Collapsed;
@@ -102,6 +106,7 @@ namespace FiaMedKnuff.UserControls
 		}
 		private void DiceThrowFive()
 		{
+			//Dice value 5
 			dotOne.Visibility = Visibility.Visible;
 			dotTwo.Visibility = Visibility.Visible;
 			dotThree.Visibility = Visibility.Collapsed;
@@ -112,6 +117,7 @@ namespace FiaMedKnuff.UserControls
 		}
 		private void DiceThrowSix()
 		{
+			//Dice value 6
 			dotOne.Visibility = Visibility.Visible;
 			dotTwo.Visibility = Visibility.Visible;
 			dotThree.Visibility = Visibility.Visible;

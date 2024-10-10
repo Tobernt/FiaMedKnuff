@@ -103,7 +103,6 @@ namespace FiaMedKnuff
             random = new Random();
             currentPlayerIndex = random.Next(0, 4); // Randomizes initial starting player
 			DiceIsEnable(currentPlayerIndex);
-			hasStarted = new bool[totalPlayers];
         }
 
         private void DiceIsEnable(int currentPlayerIndex)
