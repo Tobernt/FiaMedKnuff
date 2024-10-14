@@ -6,7 +6,10 @@ namespace FiaMedKnuff
     public class Player
     {
         public string Name { get; set; }
-        public int Position { get; private set; }
+        public int Position { get; set; }
+        public bool HasWon {  get; set; }
+        public bool HasStarted { get; set; }
+        public int Moves { get; set; }
 
         public Player(string name)
         {
