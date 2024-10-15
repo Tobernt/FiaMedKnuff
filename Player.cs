@@ -11,7 +11,6 @@ namespace FiaMedKnuff
         public bool HasStarted { get; set; } // Indicates if at least one piece has started
         public int Moves { get; set; }
         public int PiecesInNest { get; set; } // Number of pieces still in the nest
-        public bool HasPiecesOnBoard { get; set; } // Indicates if the player has any pieces on the board
         private int[] tokenPositions; // Array to store the positions of the player's 4 tokens
 
         /// <summary>
@@ -24,7 +23,6 @@ namespace FiaMedKnuff
             HasWon = false;
             HasStarted = false; // No pieces have started initially
             PiecesInNest = 4; // All 4 pieces start in the nest
-            HasPiecesOnBoard = false; // Initially, no pieces are on the board
             tokenPositions = new int[4]; // Initialize positions for all 4 tokens
 
             // Set all token positions to -1 (indicating they are in the nest)
@@ -53,10 +51,25 @@ namespace FiaMedKnuff
             {
                 PiecesInNest--; // Decrease the number of pieces in the nest
                 SetTokenPosition(tokenIndex, 0); // Move the token to the start position
-                HasPiecesOnBoard = true; // Now the player has pieces on the board
                 HasStarted = true; // Mark that the player has started
             }
         }
+        public bool HasPiecesOnBoard
+        {
+            get
+            {
+                // Loop through each token and check if any are on the board (not in the nest and not in the goal)
+                for (int i = 0; i < tokenPositions.Length; i++)
+                {
+                    if (tokenPositions[i] >= 0 && tokenPositions[i] < 99) // On the board if position is between 0 and the goal
+                    {
+                        return true;
+                    }
+                }
+                return false; // No pieces are on the board
+            }
+        }
+
 
         /// <summary>
         /// Checks if all the player's pieces are either in the goal or in the nest.

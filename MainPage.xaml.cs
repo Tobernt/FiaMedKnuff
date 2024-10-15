@@ -116,18 +116,16 @@ namespace FiaMedKnuff
             bool allPiecesInNestOrGoal = players[currentPlayerIndex].AllPiecesInNestOrGoal(); // Check if all pieces are in nest or goal
 
             // Case 1: If all pieces are either in the nest or goal and player rolls a 1 or 6, move a piece out of the nest
-            if (allPiecesInNestOrGoal && (diceRoll == 1))
+            if (diceRoll == 1 && !hasPiecesOnBoard)
             {
                 // Move a piece out of the nest
                 int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                 players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
                 MovePlayer(currentPlayerIndex, diceRoll == 1 ? 0 : 5, tokenToMoveOut); // Move the piece to the start or 6 steps based on the dice roll
 
-                // Mark that the player now has pieces on the board
-                players[currentPlayerIndex].HasPiecesOnBoard = true;
             }
             // Case 2: If the player rolls a 6, still has pieces in the nest, and none on the board
-            else if (diceRoll == 6 && !hasPiecesOnBoard && hasPiecesInNest)
+            else if (diceRoll == 6 && !hasPiecesOnBoard)
             {
                 // Prompt the player to choose between moving one token 6 steps or moving two tokens 1 step each
                 ContentDialog choiceDialog = new ContentDialog
@@ -164,9 +162,6 @@ namespace FiaMedKnuff
                         MovePlayer(currentPlayerIndex, 0, secondToken);
                     }
                 }
-
-                // Mark that the player now has pieces on the board
-                players[currentPlayerIndex].HasPiecesOnBoard = true;
             }
             // Case 3: If the player has pieces on the board, move an existing piece based on the dice roll
             else if (hasPiecesOnBoard)
