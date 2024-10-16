@@ -137,6 +137,9 @@
     <Compile Include="UserControls\HighScore_Popup.xaml.cs">
       <DependentUpon>HighScore_Popup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\GameSettings_Popup.xaml.cs">
+      <DependentUpon>GameSettings_Popup.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -166,6 +169,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\HighScore_Popup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\GameSettings_Popup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

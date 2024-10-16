@@ -12,12 +12,16 @@ namespace FiaMedKnuff
 			{
 				highScorePage.MainMenuInstance = this;
 			}
-		}
+
+            if (gameSettingsPopup != null)
+            {
+                gameSettingsPopup.MainMenuInstance = this;
+            }
+        }
 
         private void StartGame_Click(object sender, RoutedEventArgs e)
         {
-            // Navigate to the MainPage
-            Frame.Navigate(typeof(MainPage));
+            gameSettingsPopup.Visibility = Visibility.Visible;
         }
 
         private void HighScore_Click(object sender, RoutedEventArgs e)

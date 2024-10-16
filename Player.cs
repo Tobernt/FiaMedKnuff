@@ -5,6 +5,14 @@ namespace FiaMedKnuff
     /// </summary>
     public class Player
     {
+        public enum PlayerType
+        {
+            None,
+            Player,
+            Computer
+        }
+        public PlayerType Type { get; set; }
+
         public string Name { get; set; }
         public int Position { get; set; }
         public bool HasWon { get; set; }
