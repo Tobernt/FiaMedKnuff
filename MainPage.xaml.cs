@@ -254,7 +254,6 @@ namespace FiaMedKnuff
 			return moveBackPaces - pacesToGoal; // Returns the amount of paces to go back if larger than paces to goal
 		}
         private void HandlePlayerGoal(int playerIndex, int tokenIndex)
-
         {
             string playerColor = IndexToName(playerIndex);
             DiceRollResult.Text = $"Player {playerColor} has reached the goal with one of their pieces!";
