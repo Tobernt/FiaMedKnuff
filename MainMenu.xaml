@@ -16,5 +16,6 @@
             <Button Content="Quit" Click="Quit_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" IsEnabled="False" FontSize="18" FontWeight="ExtraBold"/>
         </StackPanel>
         <userControls:HighScore_Popup x:Name="highScorePage" x:FieldModifier="public" Visibility="Collapsed" Height="700" Width="550"/>
+        <userControls:GameSettings_Popup x:Name="gameSettingsPopup" x:FieldModifier="public" Visibility="Collapsed"/>
     </Grid>
 </Page>
