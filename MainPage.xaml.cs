@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using FiaMedKnuff;
+using Windows.Media.PlayTo;
 
 namespace FiaMedKnuff
 {
@@ -180,6 +181,12 @@ namespace FiaMedKnuff
             return random.Next(1, 7); 
         }
 
+        private int PacesToMoveBack(int position, int pathLength, int steps)
+        {
+            int pacesToGoal = (pathLength - 1) - position; // 2
+            int moveBackPaces = (position + steps) - (pathLength - 1); // 3
+            return moveBackPaces - pacesToGoal;
+        }
         private void MovePlayer(int playerIndex, int steps, int tokenIndex)
         {
             // Get the current position of the specific token
@@ -197,6 +204,18 @@ namespace FiaMedKnuff
                 players[playerIndex].SetTokenPosition(tokenIndex, 0); // Move the token to the start of the path
                 players[playerIndex].PiecesInNest--; // Decrease the number of pieces in the nest
             }
+            else if (currentPosition + steps > GetPlayerPath(playerIndex).Length - 1)
+            {
+                var path = GetPlayerPath(playerIndex);
+                int moveBack = PacesToMoveBack(currentPosition, path.Length, steps);
+                int newPositionOnBoard = currentPosition - moveBack;
+				players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
+                Debug.WriteLine($"Player: {IndexToName(playerIndex)}  Dice: {steps}  Current position: {currentPosition}  New Position = {newPositionOnBoard}");
+                Debug.WriteLine($"Length of array: {path.Length - 1}   New index: {newPositionOnBoard}");
+				Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
+				var (newRow, newCol) = path[newPositionOnBoard];
+				SetTokenPosition(playerToken, newRow, newCol);
+			}
             else
             {
                 // Move the token forward by the number of steps
@@ -206,6 +225,7 @@ namespace FiaMedKnuff
                 var path = GetPlayerPath(playerIndex);
                 if (newPositionOnBoard >= path.Length)
                 {
+                    //newPositionOnBoard = PacesToMoveBack(newPositionOnBoard, path);
                     newPositionOnBoard = path.Length - 1; // Cap the position to the end of the path
                 }
 
@@ -216,6 +236,7 @@ namespace FiaMedKnuff
                 if (newPositionOnBoard == path.Length - 1)
                 {
                     // Move the piece into the goal (mark it as 99)
+
                     players[playerIndex].SetTokenPosition(tokenIndex, 99);
                 }
 
