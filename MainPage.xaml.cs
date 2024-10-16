@@ -180,13 +180,6 @@ namespace FiaMedKnuff
         {
             return random.Next(1, 7); 
         }
-
-        private int PacesToMoveBack(int position, int pathLength, int steps)
-        {
-            int pacesToGoal = (pathLength - 1) - position; // 2
-            int moveBackPaces = (position + steps) - (pathLength - 1); // 3
-            return moveBackPaces - pacesToGoal;
-        }
         private void MovePlayer(int playerIndex, int steps, int tokenIndex)
         {
             // Get the current position of the specific token
@@ -204,14 +197,13 @@ namespace FiaMedKnuff
                 players[playerIndex].SetTokenPosition(tokenIndex, 0); // Move the token to the start of the path
                 players[playerIndex].PiecesInNest--; // Decrease the number of pieces in the nest
             }
+            // If the throw does not match the paces remaining to goal, moves back excess paces
             else if (currentPosition + steps > GetPlayerPath(playerIndex).Length - 1)
             {
                 var path = GetPlayerPath(playerIndex);
                 int moveBack = PacesToMoveBack(currentPosition, path.Length, steps);
                 int newPositionOnBoard = currentPosition - moveBack;
 				players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
-                Debug.WriteLine($"Player: {IndexToName(playerIndex)}  Dice: {steps}  Current position: {currentPosition}  New Position = {newPositionOnBoard}");
-                Debug.WriteLine($"Length of array: {path.Length - 1}   New index: {newPositionOnBoard}");
 				Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
 				var (newRow, newCol) = path[newPositionOnBoard];
 				SetTokenPosition(playerToken, newRow, newCol);
@@ -273,9 +265,14 @@ namespace FiaMedKnuff
             return -1; // No tokens on the board (this shouldn't happen if HasStarted is true)
         }
 
+		private int PacesToMoveBack(int position, int pathLength, int steps)
+		{
+			int pacesToGoal = (pathLength - 1) - position;
+			int moveBackPaces = (position + steps) - (pathLength - 1);
+			return moveBackPaces - pacesToGoal; // Returns the amount of paces to go back if larger than paces to goal
+		}
 
-
-        private void HandlePlayerGoal(int playerIndex, int tokenIndex)
+		private void HandlePlayerGoal(int playerIndex, int tokenIndex)
         {
             string playerColor = IndexToName(playerIndex);
             DiceRollResult.Text = $"Player {playerColor} has reached the goal with one of their pieces!";
