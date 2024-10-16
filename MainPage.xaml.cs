@@ -21,12 +21,12 @@ namespace FiaMedKnuff
         private readonly (int row, int col)[] RedPath = new (int row, int col)[]
         {
             // Starting from Red quadrant at (4, 0)
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), 
-            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), (0, 6), 
-            (1, 6), (2, 6), (3, 6), (4, 6), (4, 7), (4, 8), 
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), (0, 6),
+            (1, 6), (2, 6), (3, 6), (4, 6), (4, 7), (4, 8),
             (4, 9), (4, 10), (5, 10), (6, 10), (6, 9), (6, 8),
-            (6, 7), (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), 
-            (10, 5), (10, 4), (9, 4), (8, 4), (7, 4), (6, 4), 
+            (6, 7), (6, 6), (7, 6), (8, 6), (9, 6), (10, 6),
+            (10, 5), (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
             (6, 3), (6, 2), (6, 1), (6, 0), (5, 0), (5, 1),
             (5, 2), (5,3),(5,4),(5,5)
         };
@@ -34,39 +34,39 @@ namespace FiaMedKnuff
         private readonly (int row, int col)[] BluePath = new (int row, int col)[]
         {
             // Starting from Blue quadrant at (0, 6), moving down
-            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), 
-            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10), 
-            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6), 
+            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6),
+            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10),
+            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6),
             (7, 6), (8, 6), (9, 6), (10, 6), (10, 5),
-            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4), 
-            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0), 
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), 
-            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), 
+            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
+            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),
             (1,5), (2,5), (3,5), (4,5), (5,5)
         };
 
         private readonly (int row, int col)[] YellowPath = new (int row, int col)[]
         {
-            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4), 
-            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0), 
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), 
-            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), 
-            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), 
-            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10), 
-            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6), 
-            (7, 6), (8, 6), (9, 6), (10, 6), (10,5), 
+            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
+            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),
+            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6),
+            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10),
+            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6),
+            (7, 6), (8, 6), (9, 6), (10, 6), (10,5),
             (9,5), (8,5), (6,5),(5,5)
         };
 
         private readonly (int row, int col)[] GreenPath = new (int row, int col)[]
         {
-            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6), 
-            (7, 6), (8, 6), (9, 6), (10, 6), (10, 5), 
-            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4), 
-            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0), 
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), 
-            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), 
-            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), 
+            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6),
+            (7, 6), (8, 6), (9, 6), (10, 6), (10, 5),
+            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
+            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),
+            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6),
             (4, 7), (4, 8), (4, 9), (4, 10), (5, 10),
             (5, 9), (5, 8), (5, 7),(5, 6), (5, 5)
         };
@@ -75,24 +75,24 @@ namespace FiaMedKnuff
         {
             this.InitializeComponent();
 
-            Player red = new Player("red"); 
+            Player red = new Player("red");
             Player blue = new Player("blue");
             Player green = new Player("green");
             Player yellow = new Player("yellow");
             players = new Player[] { red, blue, green, yellow };
             random = new Random();
-            currentPlayerIndex = random.Next(0, 4); 
-			DiceIsEnable(currentPlayerIndex);
+            currentPlayerIndex = random.Next(0, 4);
+            DiceIsEnable(currentPlayerIndex);
         }
 
         private void DiceIsEnable(int currentPlayerIndex)
         {
-			Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
+            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
             foreach (Button button in diceButtons)
             {
                 button.IsEnabled = false;
             }
-            if(currentPlayerIndex >= 0 && currentPlayerIndex < diceButtons.Length) 
+            if (currentPlayerIndex >= 0 && currentPlayerIndex < diceButtons.Length)
             {
                 diceButtons[currentPlayerIndex].IsEnabled = true;
             }
@@ -111,23 +111,18 @@ namespace FiaMedKnuff
 
             DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
-            bool hasPiecesOnBoard = players[currentPlayerIndex].HasPiecesOnBoard; // Are any pieces on the board?
-            bool hasPiecesInNest = players[currentPlayerIndex].HasPiecesInNest(); // Are there still pieces in the nest?
-            bool allPiecesInNestOrGoal = players[currentPlayerIndex].AllPiecesInNestOrGoal(); // Check if all pieces are in nest or goal
+            bool hasPiecesOnBoard = players[currentPlayerIndex].HasPiecesOnBoard;
+            bool hasPiecesInNest = players[currentPlayerIndex].HasPiecesInNest();
+            bool allPiecesInNestOrGoal = players[currentPlayerIndex].AllPiecesInNestOrGoal();
 
-            // Case 1: If all pieces are either in the nest or goal and player rolls a 1 or 6, move a piece out of the nest
             if (diceRoll == 1 && !hasPiecesOnBoard)
             {
-                // Move a piece out of the nest
                 int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                 players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
-                MovePlayer(currentPlayerIndex, diceRoll == 1 ? 0 : 5, tokenToMoveOut); // Move the piece to the start or 6 steps based on the dice roll
-
+                MovePlayer(currentPlayerIndex, diceRoll == 1 ? 0 : 5, tokenToMoveOut);
             }
-            // Case 2: If the player rolls a 6, still has pieces in the nest, and none on the board
             else if (diceRoll == 6 && !hasPiecesOnBoard)
             {
-                // Prompt the player to choose between moving one token 6 steps or moving two tokens 1 step each
                 ContentDialog choiceDialog = new ContentDialog
                 {
                     Title = "Move Choice",
@@ -140,22 +135,17 @@ namespace FiaMedKnuff
 
                 if (result == ContentDialogResult.Primary)
                 {
-                    // Move one token out by 6 steps
                     int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                     players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
-                    MovePlayer(currentPlayerIndex, 5, tokenToMoveOut); // Move out and move by 6 steps
+                    MovePlayer(currentPlayerIndex, 5, tokenToMoveOut);
                 }
                 else if (result == ContentDialogResult.Secondary)
                 {
-                    // Move two tokens 1 step each from the nest
-
-                    // First token
                     int firstToken = GetNextTokenInNest(currentPlayerIndex);
                     players[currentPlayerIndex].MoveOutOfNest(firstToken);
                     MovePlayer(currentPlayerIndex, 0, firstToken);
 
-                    // Second token
-                    if (players[currentPlayerIndex].PiecesInNest > 0) // Only if there are more pieces in the nest
+                    if (players[currentPlayerIndex].PiecesInNest > 0)
                     {
                         int secondToken = GetNextTokenInNest(currentPlayerIndex);
                         players[currentPlayerIndex].MoveOutOfNest(secondToken);
@@ -163,106 +153,96 @@ namespace FiaMedKnuff
                     }
                 }
             }
-            // Case 3: If the player has pieces on the board, move an existing piece based on the dice roll
             else if (hasPiecesOnBoard)
             {
-                // Normal movement for a piece already on the board
                 MovePlayer(currentPlayerIndex, diceRoll, GetNextTokenOnBoard(currentPlayerIndex));
             }
 
-            // Move to the next player
-            currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
-            DiceIsEnable(currentPlayerIndex);
+            if (diceRoll != 6)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+                DiceIsEnable(currentPlayerIndex);
+            }
+            else
+            {
+                DiceRollResult.Text += " (Player gets to roll again!)";
+            }
         }
 
         private int RollDice()
         {
-            return random.Next(1, 7); 
+            return random.Next(1, 7);
         }
 
         private void MovePlayer(int playerIndex, int steps, int tokenIndex)
         {
-            // Get the current position of the specific token
             int currentPosition = players[playerIndex].GetTokenPosition(tokenIndex);
 
-            // If the token is already in the goal (position 99), skip movement
             if (currentPosition == 99)
             {
-                return; // Skip any movement for pieces already in the goal
+                return;
             }
 
-            // If the token is still in the nest, move it to the start
             if (currentPosition == -1)
             {
-                players[playerIndex].SetTokenPosition(tokenIndex, 0); // Move the token to the start of the path
-                players[playerIndex].PiecesInNest--; // Decrease the number of pieces in the nest
+                players[playerIndex].SetTokenPosition(tokenIndex, 0);
+                players[playerIndex].PiecesInNest--;
             }
             else
             {
-                // Move the token forward by the number of steps
                 int newPositionOnBoard = currentPosition + steps;
 
-                // Ensure the token does not go beyond the last position on the path
                 var path = GetPlayerPath(playerIndex);
                 if (newPositionOnBoard >= path.Length)
                 {
-                    newPositionOnBoard = path.Length - 1; // Cap the position to the end of the path
+                    newPositionOnBoard = path.Length - 1;
                 }
 
-                // Set the new position
                 players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
 
-                // Check if the piece has reached the goal
                 if (newPositionOnBoard == path.Length - 1)
                 {
-                    // Move the piece into the goal (mark it as 99)
                     players[playerIndex].SetTokenPosition(tokenIndex, 99);
                 }
 
-                // Move the player token visually on the board
                 Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
                 var (newRow, newCol) = path[newPositionOnBoard];
                 SetTokenPosition(playerToken, newRow, newCol);
             }
         }
 
-        // Get the index of the next token in the nest
         private int GetNextTokenInNest(int playerIndex)
         {
             for (int i = 0; i < 4; i++)
             {
-                if (players[playerIndex].GetTokenPosition(i) == -1) // If the token is in the nest
+                if (players[playerIndex].GetTokenPosition(i) == -1)
                 {
                     return i;
                 }
             }
-            return -1; // No tokens in the nest
+            return -1;
         }
-        // Get the index of the next token already on the board
+
         private int GetNextTokenOnBoard(int playerIndex)
         {
             for (int i = 0; i < 4; i++)
             {
                 int tokenPosition = players[playerIndex].GetTokenPosition(i);
-                if (tokenPosition != -1 && tokenPosition != 99) // Ensure the token is not in the nest or goal
+                if (tokenPosition != -1 && tokenPosition != 99)
                 {
                     return i;
                 }
             }
-            return -1; // No tokens on the board (this shouldn't happen if HasStarted is true)
+            return -1;
         }
-
-
 
         private void HandlePlayerGoal(int playerIndex, int tokenIndex)
         {
             string playerColor = IndexToName(playerIndex);
             DiceRollResult.Text = $"Player {playerColor} has reached the goal with one of their pieces!";
 
-            // Mark the token as having reached the goal
-            players[playerIndex].SetTokenPosition(tokenIndex, 99); // Use 99 to mark the token in the goal
+            players[playerIndex].SetTokenPosition(tokenIndex, 99);
 
-            // Check if all pieces have reached the goal
             if (players[playerIndex].AllPiecesInGoal())
             {
                 players[playerIndex].HasWon = true;
@@ -274,10 +254,10 @@ namespace FiaMedKnuff
         {
             switch (index)
             {
-                case 0: return "Red"; 
-                case 1: return "Blue"; 
-                case 2: return "Green"; 
-                case 3: return "Yellow"; 
+                case 0: return "Red";
+                case 1: return "Blue";
+                case 2: return "Green";
+                case 3: return "Yellow";
                 default: return null;
             }
         }
@@ -286,7 +266,7 @@ namespace FiaMedKnuff
         {
             switch (playerIndex)
             {
-                case 0: // Red player
+                case 0:
                     switch (tokenIndex)
                     {
                         case 0: return Player1Token;
@@ -295,7 +275,7 @@ namespace FiaMedKnuff
                         case 3: return Player1Token4;
                     }
                     break;
-                case 1: // Blue player
+                case 1:
                     switch (tokenIndex)
                     {
                         case 0: return Player2Token;
@@ -304,7 +284,7 @@ namespace FiaMedKnuff
                         case 3: return Player2Token4;
                     }
                     break;
-                case 2: // Green player
+                case 2:
                     switch (tokenIndex)
                     {
                         case 0: return Player3Token;
@@ -313,7 +293,7 @@ namespace FiaMedKnuff
                         case 3: return Player3Token4;
                     }
                     break;
-                case 3: // Yellow player
+                case 3:
                     switch (tokenIndex)
                     {
                         case 0: return Player4Token;
@@ -323,17 +303,17 @@ namespace FiaMedKnuff
                     }
                     break;
             }
-            return null; // Default case if no valid token is found
+            return null;
         }
 
         private (int row, int col)[] GetPlayerPath(int playerIndex)
         {
             switch (playerIndex)
             {
-                case 0: return RedPath; 
-                case 1: return BluePath; 
-                case 2: return GreenPath; 
-                case 3: return YellowPath; 
+                case 0: return RedPath;
+                case 1: return BluePath;
+                case 2: return GreenPath;
+                case 3: return YellowPath;
                 default: return null;
             }
         }
