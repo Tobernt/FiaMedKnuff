@@ -178,32 +178,35 @@ namespace FiaMedKnuff
         {
             int currentPosition = players[playerIndex].GetTokenPosition(tokenIndex);
 
+            // Om pjäsen redan är i mål, gör inget
             if (currentPosition == 99)
             {
                 return;
             }
 
+            // Flytta pjäsen från boet till start om den fortfarande är i boet
             if (currentPosition == -1)
             {
                 players[playerIndex].SetTokenPosition(tokenIndex, 0);
                 players[playerIndex].PiecesInNest--;
             }
-            // If the throw does not match the paces remaining to goal, moves back excess paces
             else if (currentPosition + steps > GetPlayerPath(playerIndex).Length - 1)
             {
+                // Om kastet gör att pjäsen går förbi målet, flytta tillbaka överflödiga steg
                 var path = GetPlayerPath(playerIndex);
                 int moveBack = PacesToMoveBack(currentPosition, path.Length, steps);
                 int newPositionOnBoard = currentPosition - moveBack;
-				players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
-				Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
-				var (newRow, newCol) = path[newPositionOnBoard];
-				SetTokenPosition(playerToken, newRow, newCol);
-			}
+                players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
+                Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
+                var (newRow, newCol) = path[newPositionOnBoard];
+                SetTokenPosition(playerToken, newRow, newCol);
+            }
             else
             {
+                // Flytta pjäsen framåt med antal steg
                 int newPositionOnBoard = currentPosition + steps;
-
                 var path = GetPlayerPath(playerIndex);
+
                 if (newPositionOnBoard >= path.Length)
                 {
                     newPositionOnBoard = path.Length - 1;
@@ -211,16 +214,21 @@ namespace FiaMedKnuff
 
                 players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
 
+                // Kontrollera om pjäsen nått målet
                 if (newPositionOnBoard == path.Length - 1)
                 {
-                    players[playerIndex].SetTokenPosition(tokenIndex, 99);
+                    players[playerIndex].SetTokenPosition(tokenIndex, 99); // Markera att pjäsen är i mål
+                    HandlePlayerGoal(playerIndex, tokenIndex); // Kontrollera om spelaren har vunnit
                 }
 
+                // Flytta pjäsen visuellt
                 Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
                 var (newRow, newCol) = path[newPositionOnBoard];
                 SetTokenPosition(playerToken, newRow, newCol);
             }
         }
+
+
 
         private int GetNextTokenInNest(int playerIndex)
         {
@@ -255,17 +263,38 @@ namespace FiaMedKnuff
 		}
         private void HandlePlayerGoal(int playerIndex, int tokenIndex)
         {
+            // Hämta färgnamnet för spelaren
             string playerColor = IndexToName(playerIndex);
+
+            // Uppdatera resultattexten för att visa att spelaren nått målet
             DiceRollResult.Text = $"Player {playerColor} has reached the goal with one of their pieces!";
 
+            // Markera pjäsen som i mål genom att sätta positionen till 99
             players[playerIndex].SetTokenPosition(tokenIndex, 99);
 
+            // Kontrollera om alla pjäser för spelaren är i mål
             if (players[playerIndex].AllPiecesInGoal())
             {
+                // Om alla pjäser är i mål, markera att spelaren har vunnit
                 players[playerIndex].HasWon = true;
+
+                // Uppdatera resultattexten för att visa att spelaren har vunnit spelet
                 DiceRollResult.Text += $" {playerColor} has won the game!";
+
+                // Här kan du lägga till logik för att avsluta spelet eller visa ett popup-meddelande om vinsten
+                // Exempelvis kan du lägga till en ContentDialog för att meddela att spelet är över
+                var winDialog = new ContentDialog
+                {
+                    Title = "Game Over",
+                    Content = $"Congratulations! {playerColor} has won the game!",
+                    CloseButtonText = "OK"
+                };
+
+                // Visa vinstdialogen
+                _ = winDialog.ShowAsync();
             }
         }
+
 
         private string IndexToName(int index)
         {
