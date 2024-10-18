@@ -8,6 +8,8 @@ using Windows.UI.Xaml.Shapes;
 using FiaMedKnuff;
 using Windows.Media.PlayTo;
 using Windows.UI.Xaml.Input;
+using Windows.UI;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Navigation;
 
 namespace FiaMedKnuff
@@ -284,7 +286,73 @@ namespace FiaMedKnuff
 			}
 		}
 
-		private void Chosen_Token(object sender, TappedRoutedEventArgs e)
+        //Method applying new strokethickness to tapped token
+        private void HighlightSelectedToken(Grid tokenGrid)
+        {
+            AddDropShadow(tokenGrid);
+
+            foreach (var child in tokenGrid.Children)
+            {
+                if (child is Rectangle rectangle)
+                {
+                    rectangle.StrokeThickness = 5;
+                }
+
+                else if (child is Ellipse ellipse)
+                {
+                    ellipse.StrokeThickness = 5;
+                }
+            }
+        }
+
+        //Method applying shadoweffect to tapped token
+        private void AddDropShadow(Grid targetElement)
+        {
+            var compositor = Window.Current.Compositor;
+
+            var dropShadow = compositor.CreateDropShadow();
+
+            dropShadow.Color = Colors.Black;
+            dropShadow.BlurRadius = 15;
+            dropShadow.Opacity = (float)0.4;
+
+            var shadowVisual = compositor.CreateSpriteVisual();
+            shadowVisual.Size = new System.Numerics.Vector2((float)targetElement.ActualWidth, (float)targetElement.ActualHeight);
+            shadowVisual.Shadow = dropShadow;
+
+            if (targetElement.Children[1] is Ellipse ellipse)
+            {
+                dropShadow.Mask = ellipse.GetAlphaMask();
+            }
+
+            else if (targetElement.Children[0] is Rectangle rectangle)
+            {
+                dropShadow.Mask = rectangle.GetAlphaMask();
+            }
+
+            ElementCompositionPreview.SetElementChildVisual(targetElement, shadowVisual);
+        }
+
+        //Method removing added effects to tapped token
+        private void ResetTokenEffects(Grid tokenGrid)
+        {
+            ElementCompositionPreview.SetElementChildVisual(tokenGrid, null);
+
+            foreach (var child in tokenGrid.Children)
+            {
+                if (child is Rectangle rectangle)
+                {
+                    rectangle.StrokeThickness = 3;
+                }
+
+                else if (child is Ellipse ellipse)
+                {
+                    ellipse.StrokeThickness = 3;
+                }
+            }
+        }
+
+        private void Chosen_Token(object sender, TappedRoutedEventArgs e)
         {
             for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
             {
@@ -320,6 +388,8 @@ namespace FiaMedKnuff
                                 EnableDiceForCurrentPlayer();
 
                                 DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)}s token selected";
+
+                                HighlightSelectedToken(ClickToken);
                             }
                         }
                     }
@@ -405,6 +475,8 @@ namespace FiaMedKnuff
                 var (newRow, newCol) = path[newPositionOnBoard];
                 SetTokenPosition(playerToken, newRow, newCol);
                 CheckForOverlappingTokens(playerIndex, tokenIndex);
+
+                ResetTokenEffects(playerToken);
             }
         }
         private void CheckForOverlappingTokens(int playerIndex, int tokenIndex)
