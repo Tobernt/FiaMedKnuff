@@ -17,5 +17,6 @@
         </StackPanel>
         <userControls:HighScore_Popup x:Name="highScorePage" x:FieldModifier="public" Visibility="Collapsed" Height="700" Width="550"/>
         <userControls:GameSettings_Popup x:Name="gameSettingsPopup" x:FieldModifier="public" Visibility="Collapsed"/>
+        <userControls:Sound_Button x:FieldModifier="public" Visibility="Visible"/>
     </Grid>
 </Page>
