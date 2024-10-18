@@ -140,8 +140,13 @@
     <Compile Include="UserControls\GameSettings_Popup.xaml.cs">
       <DependentUpon>GameSettings_Popup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\Sound_Button.xaml.cs">
+      <DependentUpon>Sound_Button.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\sound-off.png" />
+    <Content Include="Assets\sound.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -173,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\GameSettings_Popup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\Sound_Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
