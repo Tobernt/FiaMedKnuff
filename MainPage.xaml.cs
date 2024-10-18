@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using FiaMedKnuff;
 using Windows.Media.PlayTo;
+using Windows.UI.Xaml.Input;
 
 namespace FiaMedKnuff
 {
@@ -17,6 +18,8 @@ namespace FiaMedKnuff
         private int totalPlayers = 4;
         private Random random;
         DateTime startTime = DateTime.Now;
+        private int selectedTokenIndex = -1;
+        private int diceRoll;
 
         // Paths for each player, defined as (row, column) positions on the grid.
         private readonly (int row, int col)[] RedPath = new (int row, int col)[]
@@ -92,16 +95,42 @@ namespace FiaMedKnuff
             foreach (Button button in diceButtons)
             {
                 button.IsEnabled = false;
+
+                button.Visibility = Visibility.Collapsed;
             }
+
+            diceButtons[currentPlayerIndex].IsEnabled = false;
+            diceButtons[currentPlayerIndex].Visibility = Visibility.Visible;
+
             if (currentPlayerIndex >= 0 && currentPlayerIndex < diceButtons.Length)
             {
                 diceButtons[currentPlayerIndex].IsEnabled = true;
+            }
+
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                bool isCurrentPlayer = playerIndex == currentPlayerIndex;
+
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+
+                    token.IsTapEnabled = isCurrentPlayer;
+                }
             }
         }
 
         private async void RollDice_Click(object sender, RoutedEventArgs e)
         {
-            int diceRoll = RollDice();
+            bool hasPiecesOnBorad = players[currentPlayerIndex].HasPiecesOnBoard;
+
+            if (hasPiecesOnBorad && selectedTokenIndex == -1)
+            {
+                DiceRollResult.Text = $"(Click {IndexToName(currentPlayerIndex)} token to move)";
+                return;
+            }
+
+            diceRoll = RollDice();
 
             // Display the result of the dice roll
             Button clickedButton = sender as Button;
@@ -154,19 +183,100 @@ namespace FiaMedKnuff
                     }
                 }
             }
-            else if (hasPiecesOnBoard)
+
+            if (selectedTokenIndex != -1)
             {
-                MovePlayer(currentPlayerIndex, diceRoll, GetNextTokenOnBoard(currentPlayerIndex));
+                MovePlayer(currentPlayerIndex, diceRoll, selectedTokenIndex);
+
+                DiceRollResult.Text = $"(Click {IndexToName(currentPlayerIndex)} token to move)";
+
+                selectedTokenIndex = -1;
             }
+
+            //else if (hasPiecesOnBoard)
+            //{
+            //    MovePlayer(currentPlayerIndex, diceRoll, GetNextTokenOnBoard(currentPlayerIndex));
+
+            //    DiceRollResult.Text += "(Click token to move)";
+            //}
 
             if (diceRoll != 6)
             {
                 currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
                 DiceIsEnable(currentPlayerIndex);
+                diceRoll = 0;
             }
             else
             {
                 DiceRollResult.Text += " (Player gets to roll again!)";
+
+                DiceIsEnable(currentPlayerIndex);
+                diceRoll = 0;
+            }
+        }
+
+        private void Chosen_Token(object sender, TappedRoutedEventArgs e)
+        {
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+
+                    token.Tapped += OnTokenTapped;
+                }
+            }
+        }
+
+        private void OnTokenTapped(object sender, TappedRoutedEventArgs e)
+        {
+            Grid ClickToken = sender as Grid;
+
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+
+                    if (token == ClickToken)
+                    {
+                        if (playerIndex == currentPlayerIndex)
+                        {
+                            int tokenPosition = players[playerIndex].GetTokenPosition(tokenIndex);
+
+                            if (tokenPosition != -1 && tokenPosition != 99)
+                            {
+                                selectedTokenIndex = tokenIndex;
+
+                                EnableDiceForCurrentPlayer();
+
+                                DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)}s token selected";
+                            }
+                        }
+                    }
+
+                    else
+                    {
+                        DiceRollResult.Text = $"It's {IndexToName(currentPlayerIndex)}s turn";
+                    }
+                }
+            }
+        }
+
+        private void EnableDiceForCurrentPlayer()
+        {
+            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
+
+            diceButtons[currentPlayerIndex].IsEnabled = true;
+        }
+
+        private void MoveSelectedToken()
+        {
+            if (selectedTokenIndex != -1)
+            {
+                MovePlayer(currentPlayerIndex, diceRoll, selectedTokenIndex);
+
+                selectedTokenIndex = -1;
             }
         }
 
