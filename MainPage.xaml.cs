@@ -219,6 +219,88 @@ namespace FiaMedKnuff
                 Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
                 var (newRow, newCol) = path[newPositionOnBoard];
                 SetTokenPosition(playerToken, newRow, newCol);
+                CheckForOverlappingTokens(playerIndex, tokenIndex);
+            }
+        }
+        private void CheckForOverlappingTokens(int playerIndex, int tokenIndex)
+        {
+            // Get the Grid.Row and Grid.Column of the moved token
+            Grid movedTokenGrid = GetPlayerToken(playerIndex, tokenIndex);
+            int movedTokenRow = Grid.GetRow(movedTokenGrid);
+            int movedTokenCol = Grid.GetColumn(movedTokenGrid);
+
+            // Loop through all other players to check if any token is on the same grid location
+            for (int otherPlayerIndex = 0; otherPlayerIndex < players.Length; otherPlayerIndex++)
+            {
+                if (otherPlayerIndex == playerIndex) continue; // Skip checking the current player's own tokens
+
+                // Loop through the tokens of the other player
+                for (int otherTokenIndex = 0; otherTokenIndex < 4; otherTokenIndex++)
+                {
+                    Grid otherTokenGrid = GetPlayerToken(otherPlayerIndex, otherTokenIndex);
+                    int otherTokenRow = Grid.GetRow(otherTokenGrid);
+                    int otherTokenCol = Grid.GetColumn(otherTokenGrid);
+
+                    // Compare the grid positions of both tokens
+                    if (movedTokenRow == otherTokenRow && movedTokenCol == otherTokenCol)
+                    {
+                        // Exclude the goal position (5, 5) from knockouts
+                        if (movedTokenRow == 5 && movedTokenCol == 5)
+                        {
+                            continue; // Skip knockout for tokens in the goal position
+                        }
+
+                        // Push the other player's token back to the nest
+                        players[otherPlayerIndex].SetTokenPosition(otherTokenIndex, -1); // -1 means back to the nest
+                        players[otherPlayerIndex].PiecesInNest++; // Increment the opponent's PiecesInNest count
+
+                        // Remove the token from the board visually
+                        RepopulateNest(otherPlayerIndex, otherTokenIndex);
+
+                        // Optionally, display a message about the knockout
+                        DiceRollResult.Text = $"{IndexToName(playerIndex)} knocked out {IndexToName(otherPlayerIndex)}'s piece!";
+
+                        // Break out after knocking out one piece
+                        return;
+                    }
+                }
+            }
+        }
+        private void RepopulateNest(int playerIndex, int tokenIndex)
+        {
+            // Get the player token visually
+            Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
+
+            // Use the existing nest coordinates from the player grid positions
+            switch (playerIndex)
+            {
+                case 0: // Red player
+                    if (tokenIndex == 0) SetTokenPosition(playerToken, 0, 0);
+                    if (tokenIndex == 1) SetTokenPosition(playerToken, 0, 1);
+                    if (tokenIndex == 2) SetTokenPosition(playerToken, 1, 0);
+                    if (tokenIndex == 3) SetTokenPosition(playerToken, 1, 1);
+                    break;
+
+                case 1: // Blue player
+                    if (tokenIndex == 0) SetTokenPosition(playerToken, 0, 9);
+                    if (tokenIndex == 1) SetTokenPosition(playerToken, 0, 10);
+                    if (tokenIndex == 2) SetTokenPosition(playerToken, 1, 9);
+                    if (tokenIndex == 3) SetTokenPosition(playerToken, 1, 10);
+                    break;
+
+                case 2: // Green player
+                    if (tokenIndex == 0) SetTokenPosition(playerToken, 9, 9);
+                    if (tokenIndex == 1) SetTokenPosition(playerToken, 9, 10);
+                    if (tokenIndex == 2) SetTokenPosition(playerToken, 10, 9);
+                    if (tokenIndex == 3) SetTokenPosition(playerToken, 10, 10);
+                    break;
+
+                case 3: // Yellow player
+                    if (tokenIndex == 0) SetTokenPosition(playerToken, 9, 0);
+                    if (tokenIndex == 1) SetTokenPosition(playerToken, 9, 1);
+                    if (tokenIndex == 2) SetTokenPosition(playerToken, 10, 0);
+                    if (tokenIndex == 3) SetTokenPosition(playerToken, 10, 1);
+                    break;
             }
         }
 
