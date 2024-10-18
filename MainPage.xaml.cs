@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Shapes;
 using FiaMedKnuff;
 using Windows.Media.PlayTo;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
 namespace FiaMedKnuff
 {
@@ -75,31 +76,44 @@ namespace FiaMedKnuff
             (5, 9), (5, 8), (5, 7),(5, 6), (5, 5)
         };
 
-        public MainPage()
-        {
-            this.InitializeComponent();
+		public MainPage()
+		{
+			this.InitializeComponent();
+			random = new Random();
+		}
 
-            Player red = new Player("red");
-            Player blue = new Player("blue");
-            Player green = new Player("green");
-            Player yellow = new Player("yellow");
-            players = new Player[] { red, blue, green, yellow };
-            random = new Random();
-            currentPlayerIndex = random.Next(0, 4);
-            DiceIsEnable(currentPlayerIndex);
-        }
+		public MainPage(List<Player.PlayerType> playerTypes)
+		{
+			this.InitializeComponent();
+			random = new Random();
 
-        private void DiceIsEnable(int currentPlayerIndex)
+			// Initialize players using the passed player types
+			players = new Player[]
+			{
+		        new Player("red") { Type = playerTypes[0] },
+		        new Player("blue") { Type = playerTypes[1] },
+		        new Player("green") { Type = playerTypes[2] },
+		        new Player("yellow") { Type = playerTypes[3] }
+			};
+
+			currentPlayerIndex = random.Next(0, 4);
+			DiceIsEnable(currentPlayerIndex);  // Continue with game logic
+		}
+		private void DiceIsEnable(int currentPlayerIndex)
         {
             Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
-            foreach (Button button in diceButtons)
+			while (players[currentPlayerIndex].Type == 0)
+			{
+				//Skips color if playertype is None
+				currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+			}
+			foreach (Button button in diceButtons)
             {
                 button.IsEnabled = false;
 
                 button.Visibility = Visibility.Collapsed;
             }
-
-            diceButtons[currentPlayerIndex].IsEnabled = false;
+			diceButtons[currentPlayerIndex].IsEnabled = false;
             diceButtons[currentPlayerIndex].Visibility = Visibility.Visible;
 
             if (currentPlayerIndex >= 0 && currentPlayerIndex < diceButtons.Length)
@@ -118,11 +132,16 @@ namespace FiaMedKnuff
                     token.IsTapEnabled = isCurrentPlayer;
                 }
             }
-        }
+		}
 
         private async void RollDice_Click(object sender, RoutedEventArgs e)
         {
-            bool hasPiecesOnBorad = players[currentPlayerIndex].HasPiecesOnBoard;
+			while(players[currentPlayerIndex].Type == 0)
+			{
+                //Skips color if playertype is None
+				currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+			}
+			bool hasPiecesOnBorad = players[currentPlayerIndex].HasPiecesOnBoard;
 
             if (hasPiecesOnBorad && selectedTokenIndex == -1)
             {
@@ -150,7 +169,7 @@ namespace FiaMedKnuff
                 int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                 players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
                 MovePlayer(currentPlayerIndex, diceRoll == 1 ? 0 : 5, tokenToMoveOut);
-            }
+            } 
             else if (diceRoll == 6 && !hasPiecesOnBoard)
             {
                 ContentDialog choiceDialog = new ContentDialog
@@ -214,8 +233,58 @@ namespace FiaMedKnuff
                 diceRoll = 0;
             }
         }
+		private void PlayerTypeToValue()
+		{
+			int playerValue;
 
-        private void Chosen_Token(object sender, TappedRoutedEventArgs e)
+			switch (players[currentPlayerIndex].Type)
+			{
+				case Player.PlayerType.None:
+					playerValue = 0;  // None player
+					break;
+
+				case Player.PlayerType.Player:
+					playerValue = 1;  // Human player
+					break;
+
+				case Player.PlayerType.Computer:
+					playerValue = 2;  // Computer player
+					break;
+
+				default:
+					playerValue = 0; // Unknown type, handle as needed
+					break;
+			}
+
+			Debug.WriteLine($"Player Type for currentPlayerIndex ({currentPlayerIndex}): {players[currentPlayerIndex].Type}, Value: {playerValue}");
+		}
+
+		protected override void OnNavigatedTo(NavigationEventArgs e)
+		{
+			base.OnNavigatedTo(e);
+
+			// Ensure we received player types from the game settings
+			if (e.Parameter is List<Player.PlayerType> playerTypes)
+			{
+				// Call the overloaded constructor to initialize players with the correct types
+				players = new Player[]
+				{
+			        new Player("red") { Type = playerTypes[0] },
+			        new Player("blue") { Type = playerTypes[1] },
+			        new Player("green") { Type = playerTypes[2] },
+			        new Player("yellow") { Type = playerTypes[3] }
+				};
+
+				currentPlayerIndex = random.Next(0, 4);
+				DiceIsEnable(currentPlayerIndex);
+			}
+			for (int i = 0; i < players.Length; i++)
+			{
+				Debug.WriteLine($"MainPage - Player {i + 1} type: {players[i].Type}");
+			}
+		}
+
+		private void Chosen_Token(object sender, TappedRoutedEventArgs e)
         {
             for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
             {
