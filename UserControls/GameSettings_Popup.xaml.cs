@@ -223,21 +223,24 @@ namespace FiaMedKnuff.UserControls
             Debug.WriteLine($"{player.Name} pressed next");
         }
 
-        // TODO: Go to MainPage window with players from dictionary
-        private void Game_Start(object sender, RoutedEventArgs e)
-        {
-            if (MainMenuInstance != null && MainMenuInstance.gameSettingsPopup != null)
-            {
-                MainMenuInstance.gameSettingsPopup.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                // Handle null case or log the error
-                Debug.WriteLine("MainPageInstance or gameSettingsPopup is null");
-            }
+		// TODO: Go to MainPage window with players from dictionary
+		private void Game_Start(object sender, RoutedEventArgs e)
+		{
+			if (MainMenuInstance != null && MainMenuInstance.gameSettingsPopup != null)
+			{
+				MainMenuInstance.gameSettingsPopup.Visibility = Visibility.Collapsed;
+			}
+			else
+			{
+				Debug.WriteLine("MainPageInstance or gameSettingsPopup is null");
+			}
 
-            Frame navigationFrame = Window.Current.Content as Frame;
-            navigationFrame.Navigate(typeof(MainPage));
-        }
-    }
+			// Collect the player types and pass them to the MainPage
+			List<Player.PlayerType> playerTypes = players.Values.Select(p => p.Type).ToList();
+
+			// Navigate to MainPage and pass the player types
+			Frame navigationFrame = Window.Current.Content as Frame;
+			navigationFrame.Navigate(typeof(MainPage), playerTypes); // Pass player types
+		}
+	}
 }
