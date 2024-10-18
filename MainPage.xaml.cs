@@ -83,8 +83,8 @@ namespace FiaMedKnuff
             Player blue = new Player("blue");
             Player green = new Player("green");
             Player yellow = new Player("yellow");
-            players = new Player[] { red, blue, green, yellow };
-            random = new Random();
+			players = new Player[] { red, blue, green, yellow };
+			random = new Random();
             currentPlayerIndex = random.Next(0, 4);
             DiceIsEnable(currentPlayerIndex);
         }
@@ -92,14 +92,17 @@ namespace FiaMedKnuff
         private void DiceIsEnable(int currentPlayerIndex)
         {
             Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
-            foreach (Button button in diceButtons)
+			if (players[currentPlayerIndex].Type == Player.PlayerType.None)
+			{
+				currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+			}
+			foreach (Button button in diceButtons)
             {
                 button.IsEnabled = false;
 
                 button.Visibility = Visibility.Collapsed;
             }
-
-            diceButtons[currentPlayerIndex].IsEnabled = false;
+			diceButtons[currentPlayerIndex].IsEnabled = false;
             diceButtons[currentPlayerIndex].Visibility = Visibility.Visible;
 
             if (currentPlayerIndex >= 0 && currentPlayerIndex < diceButtons.Length)
@@ -118,11 +121,15 @@ namespace FiaMedKnuff
                     token.IsTapEnabled = isCurrentPlayer;
                 }
             }
-        }
+		}
 
         private async void RollDice_Click(object sender, RoutedEventArgs e)
         {
-            bool hasPiecesOnBorad = players[currentPlayerIndex].HasPiecesOnBoard;
+			if (players[currentPlayerIndex].Type == Player.PlayerType.None)
+			{
+				currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+			}
+			bool hasPiecesOnBorad = players[currentPlayerIndex].HasPiecesOnBoard;
 
             if (hasPiecesOnBorad && selectedTokenIndex == -1)
             {
@@ -150,7 +157,7 @@ namespace FiaMedKnuff
                 int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                 players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
                 MovePlayer(currentPlayerIndex, diceRoll == 1 ? 0 : 5, tokenToMoveOut);
-            }
+            } 
             else if (diceRoll == 6 && !hasPiecesOnBoard)
             {
                 ContentDialog choiceDialog = new ContentDialog
