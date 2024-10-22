@@ -63,10 +63,11 @@
                 </Button>
 
                 <!-- Green player start zone -->
-                <Ellipse Grid.Row="9" Grid.Column="0" Width="50" Height="50" Fill="Yellow"/>
-                <Ellipse Grid.Row="10" Grid.Column="0" Width="50" Height="50" Fill="Yellow"/>
-                <Ellipse Grid.Row="9" Grid.Column="1" Width="50" Height="50" Fill="Yellow"/>
-                <Ellipse Grid.Row="10" Grid.Column="1" Width="50" Height="50" Fill="Yellow"/>
+                <Ellipse Grid.Row="9" Grid.Column="9" Width="50" Height="50" Fill="Green"/>
+                <Ellipse Grid.Row="9" Grid.Column="10" Width="50" Height="50" Fill="Green"/>
+                <Ellipse Grid.Row="10" Grid.Column="9" Width="50" Height="50" Fill="Green"/>
+                <Ellipse Grid.Row="10" Grid.Column="10" Width="50" Height="50" Fill="Green"/>
+
                 <!-- dice for Green-->
                 <Button x:Name="GreenDiceBtn" IsEnabled="False" Click="RollDice_Click" Grid.Row="7" Grid.Column="7" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Grid >
@@ -75,19 +76,16 @@
                 </Button>
 
                 <!-- Yellow player start zone -->
-                <Ellipse Grid.Row="9" Grid.Column="9" Width="50" Height="50" Fill="Green"/>
-                <Ellipse Grid.Row="9" Grid.Column="10" Width="50" Height="50" Fill="Green"/>
-                <Ellipse Grid.Row="10" Grid.Column="9" Width="50" Height="50" Fill="Green"/>
-                <Ellipse Grid.Row="10" Grid.Column="10" Width="50" Height="50" Fill="Green"/>
+                <Ellipse Grid.Row="9" Grid.Column="0" Width="50" Height="50" Fill="Yellow"/>
+                <Ellipse Grid.Row="10" Grid.Column="0" Width="50" Height="50" Fill="Yellow"/>
+                <Ellipse Grid.Row="9" Grid.Column="1" Width="50" Height="50" Fill="Yellow"/>
+                <Ellipse Grid.Row="10" Grid.Column="1" Width="50" Height="50" Fill="Yellow"/>
                 <!-- dice for Yellow-->
-
                 <Button x:Name="YellowDiceBtn" Click="RollDice_Click" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Grid >
                         <userControls:Dice x:Name="YellowDice"></userControls:Dice>
                     </Grid>
                 </Button>
-
-
 
                 <!--Lines connecting board circles-->
                 <Line Grid.Row="4" Grid.Column="0" X1="27.27" X2="245.4327" Stroke="Black" StrokeThickness="2" Grid.ColumnSpan="5" VerticalAlignment="Center"></Line>

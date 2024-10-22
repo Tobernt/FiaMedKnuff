@@ -55,14 +55,14 @@ namespace FiaMedKnuff
 
         private readonly (int row, int col)[] YellowPath = new (int row, int col)[]
         {
-            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4), 
-            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0), 
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), 
-            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), 
-            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), 
-            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10), 
-            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6), 
-            (7, 6), (8, 6), (9, 6), (10, 6), (10,5), 
+            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
+            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),
+            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6),
+            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10),
+            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6),
+            (7, 6), (8, 6), (9, 6), (10, 6), (10,5),
             (9,5), (8,5),(7, 5), (6,5),(5,5)
         };
 
@@ -79,7 +79,8 @@ namespace FiaMedKnuff
             (5, 9), (5, 8), (5, 7),(5, 6), (5, 5)
         };
 
-		public MainPage()
+
+        public MainPage()
 		{
 			this.InitializeComponent();
 			random = new Random();
@@ -104,7 +105,7 @@ namespace FiaMedKnuff
 		}
         private void DiceIsEnable(int currentPlayerIndex)
         {
-            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
+            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, YellowDiceBtn, GreenDiceBtn };
             while (players[currentPlayerIndex].Type == Player.PlayerType.None)
             {
                 currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
