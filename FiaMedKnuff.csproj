@@ -131,6 +131,7 @@
     <Compile Include="PlayerScoreManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SaveLoadManager.cs" />
+    <Compile Include="SoundManager.cs" />
     <Compile Include="UserControls\Dice.xaml.cs">
       <DependentUpon>Dice.xaml</DependentUpon>
     </Compile>
@@ -145,8 +146,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\game_dice_rolling.wav" />
+    <Content Include="Assets\game_piece_place.wav" />
+    <Content Include="Assets\game_pling.wav" />
+    <Content Include="Assets\game_win.wav" />
     <Content Include="Assets\sound-off.png" />
     <Content Include="Assets\sound.png" />
+    <Content Include="Assets\game_turn.wav" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
