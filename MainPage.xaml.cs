@@ -208,12 +208,13 @@ namespace FiaMedKnuff
                             int firstToken = GetNextTokenInNest(currentPlayerIndex);
                             players[currentPlayerIndex].MoveOutOfNest(firstToken);
                             MovePlayer(currentPlayerIndex, 0, firstToken);
-
+                            DisableTokenSelection();
                             if (players[currentPlayerIndex].HasPiecesInNest())
                             {
                                 int secondToken = GetNextTokenInNest(currentPlayerIndex);
                                 players[currentPlayerIndex].MoveOutOfNest(secondToken);
                                 MovePlayer(currentPlayerIndex, 0, secondToken);
+                                DisableTokenSelection();
                             }
 
                             // Disable token selection and allow rolling again
@@ -319,16 +320,21 @@ namespace FiaMedKnuff
                 Grid token = GetPlayerToken(playerIndex, tokenIndex);
                 int tokenPosition = players[playerIndex].GetTokenPosition(tokenIndex);
 
-                // Allow selection of tokens in the nest (-1) if a 1 or 6 is rolled
+                // Allow selection of tokens in the nest (-1) ONLY if a 1 or 6 is rolled, otherwise skip nest tokens
                 if (tokenPosition >= 0 || (tokenPosition == -1 && (diceRoll == 1 || diceRoll == 6)))
                 {
-                    token.IsTapEnabled = true;
+                    token.IsTapEnabled = true;  // Make the token tappable if valid
+                }
+                else
+                {
+                    token.IsTapEnabled = false; // Ensure nest tokens are not tappable unless 1 or 6 is rolled
                 }
             }
 
             // Prompt the player to choose a token
             DiceRollResult.Text = $"Select a token to move.";
         }
+
         private void EnableTokenSelectionForSixSteps(int playerIndex)
         {
             for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
@@ -348,7 +354,6 @@ namespace FiaMedKnuff
         }
 
 
-
         private void EnableTokenSelectionForOneStep(int playerIndex)
         {
             for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
@@ -361,12 +366,17 @@ namespace FiaMedKnuff
                 {
                     token.IsTapEnabled = true;
                 }
+                else
+                {
+                    token.IsTapEnabled = false; // Ensure that tokens in the nest aren't selectable
+                }
             }
 
             // Prompt the player to choose a token to move 1 step
             DiceRollResult.Text = $"Select a token on the board to move 1 step.";
         }
-		protected override void OnNavigatedTo(NavigationEventArgs e)
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			base.OnNavigatedTo(e);
 
