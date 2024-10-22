@@ -366,33 +366,6 @@ namespace FiaMedKnuff
             // Prompt the player to choose a token to move 1 step
             DiceRollResult.Text = $"Select a token on the board to move 1 step.";
         }
-
-        private void PlayerTypeToValue()
-		{
-			int playerValue;
-
-			switch (players[currentPlayerIndex].Type)
-			{
-				case Player.PlayerType.None:
-					playerValue = 0;  // None player
-					break;
-
-				case Player.PlayerType.Player:
-					playerValue = 1;  // Human player
-					break;
-
-				case Player.PlayerType.Computer:
-					playerValue = 2;  // Computer player
-					break;
-
-				default:
-					playerValue = 0; // Unknown type, handle as needed
-					break;
-			}
-
-			Debug.WriteLine($"Player Type for currentPlayerIndex ({currentPlayerIndex}): {players[currentPlayerIndex].Type}, Value: {playerValue}");
-		}
-
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			base.OnNavigatedTo(e);
@@ -600,17 +573,6 @@ namespace FiaMedKnuff
         {
             Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
             diceButtons[currentPlayerIndex].IsEnabled = true;
-        }
-
-
-        private void MoveSelectedToken()
-        {
-            if (selectedTokenIndex != -1)
-            {
-                MovePlayer(currentPlayerIndex, diceRoll, selectedTokenIndex);
-
-                selectedTokenIndex = -1;
-            }
         }
 
         private int RollDice()
