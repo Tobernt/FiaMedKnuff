@@ -250,12 +250,14 @@ namespace FiaMedKnuff.UserControls
 			}
             else
             {
+                //Annat meddelande?
                 Debug.WriteLine("Need atleast 2 players to start game");
             }
 
 		}
         private bool PlayerAmountCheck()
         {
+            //Checks if atleast 2 players playing
             int i = 0;
             foreach(var player in players.Values)
             {
@@ -274,6 +276,7 @@ namespace FiaMedKnuff.UserControls
         }
         private void DisableStart(bool playersAmount, Button button)
         {
+            //Needs atleast 2 players to start game
             if (!playersAmount)
             {
                 button.IsEnabled = false;
