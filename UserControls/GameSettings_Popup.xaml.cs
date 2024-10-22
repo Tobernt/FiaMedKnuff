@@ -206,7 +206,8 @@ namespace FiaMedKnuff.UserControls
             // Update the displayed text
             playerTextBlocks[playerNumber].Text = player.Type == PlayerType.Player ? player.Name : player.Type.ToString();
             Debug.WriteLine($"{player.Name} pressed previous");
-        }
+			DisableStart(PlayerAmountCheck(), StartButton);
+		}
 
         private void OnNextButtonClick(int playerNumber)
         {
@@ -221,26 +222,66 @@ namespace FiaMedKnuff.UserControls
             // Update the displayed text
             playerTextBlocks[playerNumber].Text = player.Type == PlayerType.Player ? player.Name : player.Type.ToString();
             Debug.WriteLine($"{player.Name} pressed next");
-        }
+            DisableStart(PlayerAmountCheck(), StartButton);
+		}
 
 		// TODO: Go to MainPage window with players from dictionary
 		private void Game_Start(object sender, RoutedEventArgs e)
 		{
-			if (MainMenuInstance != null && MainMenuInstance.gameSettingsPopup != null)
-			{
-				MainMenuInstance.gameSettingsPopup.Visibility = Visibility.Collapsed;
-			}
-			else
-			{
-				Debug.WriteLine("MainPageInstance or gameSettingsPopup is null");
-			}
+            bool playerAmountCorrect = false;
+			playerAmountCorrect = PlayerAmountCheck();
+            if (playerAmountCorrect)
+            {
+				if (MainMenuInstance != null && MainMenuInstance.gameSettingsPopup != null)
+				{
+					MainMenuInstance.gameSettingsPopup.Visibility = Visibility.Collapsed;
+				}
+				else
+				{
+					Debug.WriteLine("MainPageInstance or gameSettingsPopup is null");
+				}
 
-			// Collect the player types and pass them to the MainPage
-			List<Player.PlayerType> playerTypes = players.Values.Select(p => p.Type).ToList();
+				// Collect the player types and pass them to the MainPage
+				List<Player.PlayerType> playerTypes = players.Values.Select(p => p.Type).ToList();
 
-			// Navigate to MainPage and pass the player types
-			Frame navigationFrame = Window.Current.Content as Frame;
-			navigationFrame.Navigate(typeof(MainPage), playerTypes); // Pass player types
+				// Navigate to MainPage and pass the player types
+				Frame navigationFrame = Window.Current.Content as Frame;
+				navigationFrame.Navigate(typeof(MainPage), playerTypes); // Pass player types
+			}
+            else
+            {
+                Debug.WriteLine("Need atleast 2 players to start game");
+            }
+
 		}
+        private bool PlayerAmountCheck()
+        {
+            int i = 0;
+            foreach(var player in players.Values)
+            {
+                if(player.Type != PlayerType.None)
+                {
+                    Debug.WriteLine("Players" + i);
+                    i++;
+
+                }
+            }
+            if(i < 2)
+            {
+                return false;
+            }
+            return true;
+        }
+        private void DisableStart(bool playersAmount, Button button)
+        {
+            if (!playersAmount)
+            {
+                button.IsEnabled = false;
+            }
+            else
+            {
+                button.IsEnabled = true;
+            }
+        }
 	}
 }
