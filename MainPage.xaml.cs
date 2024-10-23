@@ -141,14 +141,13 @@ namespace FiaMedKnuff
             {
                 currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
             }
-            bool hasPiecesOnBoard = players[currentPlayerIndex].HasPiecesOnBoard;
+            bool hasPiecesOnBoardLocal = players[currentPlayerIndex].HasPiecesOnBoard;
             // Disable dice after rolling to prevent multiple rolls
             DisableDiceForCurrentPlayer();
-            if (hasPiecesOnBoard && selectedTokenIndex == -1)
+            if (hasPiecesOnBoardLocal && selectedTokenIndex == -1)
             {
                 DiceRollResult.Text = $"(Click {IndexToName(currentPlayerIndex)} token to move)";
                 SoundManager.PlaySound(SoundType.Error);
-                return;
             }
 
             diceRoll = RollDice();
