@@ -143,6 +143,9 @@ namespace FiaMedKnuff
             if (stopGame)
                 return;
 
+            // add some delay for piece_place sound to finish 
+            await Task.Delay(200);
+
             // Runs atleast once
             do
             {
@@ -163,7 +166,7 @@ namespace FiaMedKnuff
 
                 Debug.WriteLine("Computer rolled " + diceRoll);
 
-                await Task.Delay(1000);
+                await Task.Delay(800);
 
                 DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
@@ -213,7 +216,7 @@ namespace FiaMedKnuff
             if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
             {
                 Debug.WriteLine("Next player is Computer, handling their turn.");
-                await HandleComputerTurn(); 
+                await HandleComputerTurn();
             }
         }
 
@@ -676,6 +679,13 @@ namespace FiaMedKnuff
         {
             currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
             diceRoll = 0;  // Reset the dice roll here
+
+            // if current player is none get next good player
+            while (players[currentPlayerIndex].Type == Player.PlayerType.None)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+                Debug.WriteLine($"Skipped {players[currentPlayerIndex].Name} because type is None.");
+            }
 
             if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
             {

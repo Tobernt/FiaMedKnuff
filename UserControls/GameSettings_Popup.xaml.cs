@@ -171,8 +171,8 @@ namespace FiaMedKnuff.UserControls
             {
                 case 0: return new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
                 case 1: return new SolidColorBrush(Color.FromArgb(255, 0, 0, 255));
-                case 2: return new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
-                case 3: return new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+                case 2: return new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+                case 3: return new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
                 default: return null;
             }
         }
@@ -187,8 +187,8 @@ namespace FiaMedKnuff.UserControls
             {
                 case 0: return new SolidColorBrush(Color.FromArgb(255, 71, 0, 0)); //71,0,0,1.000
                 case 1: return new SolidColorBrush(Color.FromArgb(255, 0, 33, 71));
-                case 2: return new SolidColorBrush(Color.FromArgb(255, 71, 60, 0));
-                case 3: return new SolidColorBrush(Color.FromArgb(255, 0, 71, 2));
+                case 2: return new SolidColorBrush(Color.FromArgb(255, 0, 71, 2));
+                case 3: return new SolidColorBrush(Color.FromArgb(255, 71, 60, 0));
                 default: return null;
             }
         }
