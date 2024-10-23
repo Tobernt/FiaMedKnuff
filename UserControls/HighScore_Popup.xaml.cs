@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using FiaMedKnuff;
+using Windows.UI.Xaml.Media.Animation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -27,20 +17,50 @@ namespace FiaMedKnuff.UserControls
 			this.InitializeComponent();
             PopulateHighScoreList();
         }
-
-        private void Exit_Highscore_Btn(object sender, RoutedEventArgs e)
+		public void StartPopupAnimation()
 		{
-			if (MainMenuInstance != null && MainMenuInstance.highScorePage != null)
+            //Slide animation from bottom of page
+			var slideInAnimation = new DoubleAnimation
 			{
-				MainMenuInstance.highScorePage.Visibility = Visibility.Collapsed;
-			}
-			else
-			{
-				// Handle null case or log the error
-				Debug.WriteLine("MainPageInstance or highScorePage is null");
-			}
-		}
+				From = 1000,
+				To = 0,
+				Duration = new Duration(TimeSpan.FromMilliseconds(600)),
+				EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseOut }
+			};
 
+			var storyboard = new Storyboard();
+			Storyboard.SetTarget(slideInAnimation, PopupTranslateTransform);
+			Storyboard.SetTargetProperty(slideInAnimation, "Y");
+
+			storyboard.Children.Add(slideInAnimation);
+			storyboard.Begin();
+		}
+		public void SlideOutAnimation(EventHandler<object> completedCallback = null)
+		{
+			//Slide animation to bottom of page, before collapsed
+			var slideOutAnimation = new DoubleAnimation
+			{
+				From = 0,
+				To = 1000,
+				Duration = new Duration(TimeSpan.FromMilliseconds(600)),
+				EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseIn }
+			};
+
+			var storyboard = new Storyboard();
+			Storyboard.SetTarget(slideOutAnimation, PopupTranslateTransform);
+			Storyboard.SetTargetProperty(slideOutAnimation, "Y");
+			if (completedCallback != null)
+			{
+				storyboard.Completed += completedCallback;
+			}
+
+			storyboard.Children.Add(slideOutAnimation);
+			storyboard.Begin();
+		}
+		private void Exit_Highscore_Btn(object sender, RoutedEventArgs e)
+		{
+            SlideOutAnimation((s, args) => MainMenuInstance.highScorePage.Visibility = Visibility.Collapsed);
+		}
         public void PopulateHighScoreList()
         {
             Debug.WriteLine("Hello!");

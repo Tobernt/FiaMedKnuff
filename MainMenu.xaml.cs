@@ -29,6 +29,7 @@ namespace FiaMedKnuff
         {
             // Popup for highscore
 			highScorePage.Visibility = Visibility.Visible;
+            highScorePage.StartPopupAnimation();
 		}
         private void Rules_Click(object sender, RoutedEventArgs e)
         {
