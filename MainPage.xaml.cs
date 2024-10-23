@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
 
 namespace FiaMedKnuff
 {
@@ -23,6 +24,7 @@ namespace FiaMedKnuff
         DateTime startTime = DateTime.Now;
         private int selectedTokenIndex = -1;
         private int diceRoll;
+        private bool stopGame = false;
 
         // Paths for each player, defined as (row, column) positions on the grid.
         private readonly (int row, int col)[] RedPath = new (int row, int col)[]
@@ -82,31 +84,15 @@ namespace FiaMedKnuff
 		{
 			this.InitializeComponent();
 			random = new Random();
+        
 		}
 
-		public MainPage(List<Player.PlayerType> playerTypes)
-		{
-			this.InitializeComponent();
-			random = new Random();
-
-			// Initialize players using the passed player types
-			players = new Player[]
-			{
-		        new Player("red") { Type = playerTypes[0] },
-		        new Player("blue") { Type = playerTypes[1] },
-		        new Player("green") { Type = playerTypes[2] },
-		        new Player("yellow") { Type = playerTypes[3] }
-			};
-
-			currentPlayerIndex = random.Next(0, 4);
-			DiceIsEnable(currentPlayerIndex);  // Continue with game logic
-		}
 		private void DiceIsEnable(int currentPlayerIndex)
         {
             Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
 			while (players[currentPlayerIndex].Type == 0)
 			{
-				//Skips color if playertype is None
+				// Skips color if playertype is None
 				currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
 			}
 			foreach (Button button in diceButtons)
@@ -136,14 +122,99 @@ namespace FiaMedKnuff
             }
 		}
 
+        private async Task HandleComputerTurn()
+        {
+            var player = players[currentPlayerIndex];
+
+            if (stopGame)
+                return;
+
+            // Runs atleast once
+            do
+            {
+                bool hasPiecesOnBoard = player.HasPiecesOnBoard;
+                bool hasPiecesInNest = player.HasPiecesInNest();
+                bool allPiecesInNestOrGoal = player.AllPiecesInNestOrGoal();
+
+                diceRoll = RollDice();
+                if (currentPlayerIndex == 0) RedDice.ThrowDiceVisual(diceRoll);
+                if (currentPlayerIndex == 1) BlueDice.ThrowDiceVisual(diceRoll);
+                if (currentPlayerIndex == 2) GreenDice.ThrowDiceVisual(diceRoll);
+                if (currentPlayerIndex == 3) YellowDice.ThrowDiceVisual(diceRoll);
+                Debug.WriteLine("Computer rolled " + diceRoll);
+
+                await Task.Delay(1000);
+
+                DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
+
+                // Logic for moving out of the nest
+                if (diceRoll == 1 && hasPiecesInNest)
+                {
+                    int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
+                    player.MoveOutOfNest(tokenToMoveOut);
+                    MovePlayer(currentPlayerIndex, 0, tokenToMoveOut);
+                }
+                else if (diceRoll == 6 && hasPiecesInNest)
+                {
+                    int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
+                    player.MoveOutOfNest(tokenToMoveOut);
+                    MovePlayer(currentPlayerIndex, 5, tokenToMoveOut);
+                }
+                else if (hasPiecesOnBoard && !allPiecesInNestOrGoal)
+                {
+                    int tokenOnBoard = GetNextTokenOnBoard(currentPlayerIndex);
+                    MovePlayer(currentPlayerIndex, diceRoll, tokenOnBoard);
+                }
+
+                if (diceRoll != 6)
+                {
+                    break;
+                }
+
+                DiceRollResult.Text += $" ({IndexToName(currentPlayerIndex)} gets to roll again!)";
+
+                await Task.Delay(1000);
+            }
+            while (diceRoll == 6);
+
+            // Pass the turn to the next player after computer finishes
+            currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+
+            // Skip None-type players
+            while (players[currentPlayerIndex].Type == Player.PlayerType.None)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+                Debug.WriteLine($"Skipped {players[currentPlayerIndex].Name} because type is {players[currentPlayerIndex].Type}.");
+            }
+
+            DiceIsEnable(currentPlayerIndex);
+
+            // If the next player is a computer, handle their turn
+            if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
+            {
+                Debug.WriteLine("Next player is Computer, handling their turn.");
+                await HandleComputerTurn(); 
+            }
+        }
+
         private async void RollDice_Click(object sender, RoutedEventArgs e)
         {
-			while(players[currentPlayerIndex].Type == 0)
-			{
+            while (players[currentPlayerIndex].Type == Player.PlayerType.None)
+            {
                 //Skips color if playertype is None
-				currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
-			}
-			bool hasPiecesOnBorad = players[currentPlayerIndex].HasPiecesOnBoard;
+                Debug.WriteLine($"Player is {players[currentPlayerIndex].Type}, skipping to {players[(currentPlayerIndex + 1) % totalPlayers].Type}");
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+            }
+
+            // Check if the current player is a computer and handle their turn
+            if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
+            {
+                Debug.WriteLine("Current player is Computer, handling their turn.");
+                await HandleComputerTurn();
+                return;
+            }
+
+            bool hasPiecesOnBorad = players[currentPlayerIndex].HasPiecesOnBoard;
 
             if (hasPiecesOnBorad && selectedTokenIndex == -1)
             {
@@ -171,7 +242,7 @@ namespace FiaMedKnuff
                 int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                 players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
                 MovePlayer(currentPlayerIndex, diceRoll == 1 ? 0 : 5, tokenToMoveOut);
-            } 
+            }
             else if (diceRoll == 6 && !hasPiecesOnBoard)
             {
                 ContentDialog choiceDialog = new ContentDialog
@@ -224,18 +295,32 @@ namespace FiaMedKnuff
             if (diceRoll != 6)
             {
                 currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
-                DiceIsEnable(currentPlayerIndex);
                 diceRoll = 0;
+
+                // Skip None-type players
+                while (players[currentPlayerIndex].Type == Player.PlayerType.None)
+                {
+                    currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+                    Debug.WriteLine($"Skipped {players[currentPlayerIndex].Name} because type is None.");
+                }
+
+                DiceIsEnable(currentPlayerIndex);
             }
             else
             {
                 DiceRollResult.Text += " (Player gets to roll again!)";
-
                 DiceIsEnable(currentPlayerIndex);
                 diceRoll = 0;
             }
+
+            // If the next player is a computer, handle their turn
+            if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
+            {
+                Debug.WriteLine("Next player is Computer, handling their turn.");
+                await HandleComputerTurn();
+            }
         }
-		private void PlayerTypeToValue()
+        private void PlayerTypeToValue()
 		{
 			int playerValue;
 
@@ -277,8 +362,23 @@ namespace FiaMedKnuff
 			        new Player("yellow") { Type = playerTypes[3] }
 				};
 
-				currentPlayerIndex = random.Next(0, 4);
-				DiceIsEnable(currentPlayerIndex);
+                // Set a random player as starting
+                currentPlayerIndex = random.Next(0, players.Length);
+
+                // If random player wasnt of type Player, look for the first player of type Player
+                if (players[currentPlayerIndex].Type != Player.PlayerType.Player)
+                {
+                    for (int i = 0; i < players.Length; i++)
+                    {
+                        if (players[i].Type == Player.PlayerType.Player)
+                        {
+                            currentPlayerIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                DiceIsEnable(currentPlayerIndex);
 			}
 			for (int i = 0; i < players.Length; i++)
 			{
@@ -706,6 +806,9 @@ namespace FiaMedKnuff
         private void Back_to_MainMenu(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainMenu));
+
+            // Kill game incase 4 AI's selected, otherwise task will be in background
+            stopGame = true;
         }
     }
 }

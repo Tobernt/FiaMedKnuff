@@ -45,7 +45,7 @@ namespace FiaMedKnuff.UserControls
                 else
                 {
                     Grid.SetRow(playerGrid, 2);
-                    Grid.SetColumn(playerGrid, i == 2 ? 0 : 2);
+                    Grid.SetColumn(playerGrid, i == 2 ? 2 : 0);
                 }
 
                 PlayerSelectorsGrid.Children.Add(playerGrid);
