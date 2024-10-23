@@ -1,3 +1,4 @@
+using Windows.ApplicationModel.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -35,7 +36,7 @@ namespace FiaMedKnuff
         }
         private void Quit_Click(object sender, RoutedEventArgs e)
         {
-
-        }
+			CoreApplication.Exit();
+		}
     }
 }

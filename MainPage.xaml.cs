@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -135,6 +135,7 @@ namespace FiaMedKnuff
         }
         private async void RollDice_Click(object sender, RoutedEventArgs e)
         {
+            DeselectAllTokens();
             // Ensure that the current player is valid
             while (players[currentPlayerIndex].Type == Player.PlayerType.None)
             {
@@ -484,6 +485,8 @@ namespace FiaMedKnuff
         private void OnTokenTapped(object sender, TappedRoutedEventArgs e)
         {
             Grid clickedToken = sender as Grid;
+            // Avmarkera alla pjäser först
+            DeselectAllTokens();
 
             for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
             {
@@ -529,10 +532,26 @@ namespace FiaMedKnuff
 
                         return; // Exit after handling the token tap
                     }
+                    HighlightSelectedToken(clickedToken); // Markera den valda pjäsen
                 }
             }
         }
+        private void DeselectAllTokens()
+        {
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
 
+                    // Återställ visuella effekter (ta bort highlight)
+                    ResetTokenEffects(token);
+                }
+            }
+
+            // Nollställ den markerade pjäsen
+            selectedTokenIndex = -1;
+        }
         private void PassTurnToNextPlayer()
         {
             currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
