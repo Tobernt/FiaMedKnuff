@@ -105,7 +105,7 @@ namespace FiaMedKnuff
 		}
         private void DiceIsEnable(int currentPlayerIndex)
         {
-            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, YellowDiceBtn, GreenDiceBtn };
+            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
             while (players[currentPlayerIndex].Type == Player.PlayerType.None)
             {
                 currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;

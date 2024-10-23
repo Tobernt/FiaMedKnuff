@@ -290,6 +290,6 @@
             <Button Content="Menu" Click="Back_to_MainMenu" Width="150" Height="50" BorderBrush="Black" BorderThickness="2" Foreground="#FFFFFF" FontWeight="ExtraBold" FontSize="18" FocusVisualSecondaryBrush="Black" Background="#FF840000"/>
         </StackPanel>
 
-        <userControls:Sound_Button x:FieldModifier="public" Visibility="Visible"/>
+        <userControls:Sound_Button x:FieldModifier="public" Visibility="Visible" Margin="1444,938,-10,-10"/>
     </Grid>
 </Page>
