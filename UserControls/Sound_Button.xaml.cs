@@ -21,7 +21,6 @@ namespace FiaMedKnuff.UserControls
 {
     public sealed partial class Sound_Button : UserControl
     {
-        public static bool SoundEnabled { get; set; } = true;
         public Sound_Button()
         {
             this.InitializeComponent();
@@ -29,9 +28,9 @@ namespace FiaMedKnuff.UserControls
 
         private void SoundToggleButton_Click(object sender, RoutedEventArgs e)
         {
-            SoundEnabled = !SoundEnabled;
+            SoundManager.SoundEnabled = !SoundManager.SoundEnabled;
 
-            if (SoundEnabled)
+            if (SoundManager.SoundEnabled)
             {
                 SoundImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/sound.png"));
             } else
