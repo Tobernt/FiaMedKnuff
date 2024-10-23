@@ -141,12 +141,19 @@ namespace FiaMedKnuff
             {
                 currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
             }
-
+            bool hasPiecesOnBoard = players[currentPlayerIndex].HasPiecesOnBoard;
             // Disable dice after rolling to prevent multiple rolls
             DisableDiceForCurrentPlayer();
+            if (hasPiecesOnBoard && selectedTokenIndex == -1)
+            {
+                DiceRollResult.Text = $"(Click {IndexToName(currentPlayerIndex)} token to move)";
+                SoundManager.PlaySound(SoundType.Error);
+                return;
+            }
 
             diceRoll = RollDice();
 
+            SoundManager.PlaySound(SoundType.DiceRoll);
             // Display the result of the dice roll
             Button clickedButton = sender as Button;
             if (clickedButton == RedDiceBtn) RedDice.ThrowDiceVisual(diceRoll);
@@ -638,6 +645,9 @@ namespace FiaMedKnuff
             }
             else
             {
+                // Spela upp ljud för pjäs rörelse
+                SoundManager.PlaySound(SoundType.PieceMove);
+
                 // Flytta pjäsen framåt med antal steg
                 int newPositionOnBoard = currentPosition + steps;
                 var path = GetPlayerPath(playerIndex);
@@ -799,6 +809,8 @@ namespace FiaMedKnuff
 
                 // Uppdatera resultattexten för att visa att spelaren har vunnit spelet
                 DiceRollResult.Text += $" {playerColor} has won the game!";
+                // Spela upp vinst ljudet
+                SoundManager.PlaySound(SoundType.Win);
 
                 // Här kan du lägga till logik för att avsluta spelet eller visa ett popup-meddelande om vinsten
                 // Exempelvis kan du lägga till en ContentDialog för att meddela att spelet är över
