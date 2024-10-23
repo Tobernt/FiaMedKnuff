@@ -12,6 +12,7 @@ using Windows.UI;
 using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Navigation;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace FiaMedKnuff
 {
@@ -204,7 +205,7 @@ namespace FiaMedKnuff
                             // Move 1 token out 6 steps
                             int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                             players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
-                            MovePlayer(currentPlayerIndex, 5, tokenToMoveOut);
+                            AnimateToken(currentPlayerIndex, 5, tokenToMoveOut);
 
                             // Disable token selection and allow rolling again
                             DisableTokenSelection();  // Disable further token movement after moving out
@@ -215,13 +216,13 @@ namespace FiaMedKnuff
                             // Move 2 tokens out 1 step each
                             int firstToken = GetNextTokenInNest(currentPlayerIndex);
                             players[currentPlayerIndex].MoveOutOfNest(firstToken);
-                            MovePlayer(currentPlayerIndex, 0, firstToken);
+                            AnimateToken(currentPlayerIndex, 0, firstToken);
                             DisableTokenSelection();
                             if (players[currentPlayerIndex].HasPiecesInNest())
                             {
                                 int secondToken = GetNextTokenInNest(currentPlayerIndex);
                                 players[currentPlayerIndex].MoveOutOfNest(secondToken);
-                                MovePlayer(currentPlayerIndex, 0, secondToken);
+                                AnimateToken(currentPlayerIndex, 0, secondToken);
                                 DisableTokenSelection();
                             }
 
@@ -272,7 +273,7 @@ namespace FiaMedKnuff
                         {
                             int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                             players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
-                            MovePlayer(currentPlayerIndex, 0, tokenToMoveOut);
+                            AnimateToken(currentPlayerIndex, 0, tokenToMoveOut);
 
                             DisableTokenSelection();  // Disable further token movement
                             PassTurnOrEnableRollForSix();  // Check if they should roll again or pass
@@ -288,7 +289,7 @@ namespace FiaMedKnuff
                 {
                     int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                     players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
-                    MovePlayer(currentPlayerIndex, 0, tokenToMoveOut);
+                    AnimateToken(currentPlayerIndex, 0, tokenToMoveOut);
 
                     DisableTokenSelection();  // Disable further token movement
                     PassTurnOrEnableRollForSix();  // Check if they should roll again or pass
@@ -508,13 +509,13 @@ namespace FiaMedKnuff
                         if (tokenPosition == -1 && (diceRoll == 1 || diceRoll == 6))
                         {
                             players[currentPlayerIndex].MoveOutOfNest(tokenIndex);
-                            MovePlayer(currentPlayerIndex, 0, tokenIndex);  // Move to the start position
+                            AnimateToken(currentPlayerIndex, 0, tokenIndex);  // Move to the start position
                             DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} moved a token out of the nest!";
                         }
                         // If the token is on the board, move it based on the dice roll
                         else if (tokenPosition >= 0 && tokenPosition != 99)
                         {
-                            MovePlayer(currentPlayerIndex, diceRoll, tokenIndex);
+                            AnimateToken(currentPlayerIndex, diceRoll, tokenIndex);
                             DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} moved a token!";
                         }
 
@@ -615,7 +616,61 @@ namespace FiaMedKnuff
         {
             return random.Next(1, 7);
         }
-        private void MovePlayer(int playerIndex, int steps, int tokenIndex)
+
+        //Metod för att animera en tokens uttoning
+        private void ApplyFadeOutAnimation(UIElement targetElement, Action onCompleted = null)
+        {
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation
+            {
+                From = 1,
+                To = 0,
+                Duration = new Duration(TimeSpan.FromSeconds(0.5))
+            };
+
+            Storyboard fadeOutStoryboard = new Storyboard();
+            fadeOutStoryboard.Children.Add(fadeOutAnimation);
+
+            Storyboard.SetTarget(fadeOutAnimation, targetElement);
+            Storyboard.SetTargetProperty(fadeOutAnimation, "Opacity");
+
+            if (onCompleted != null)
+            {
+                fadeOutStoryboard.Completed += (s, e) => onCompleted();
+            }
+
+            fadeOutStoryboard.Begin();
+        }
+
+        // Metod för att animera en tokens intoning
+        private void ApplyFadeInAnimation(UIElement targetElement)
+        {
+            DoubleAnimation fadeInAnimation = new DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                Duration = new Duration(TimeSpan.FromSeconds(0.5))
+            };
+
+            Storyboard fadeInStoryboard = new Storyboard();
+            fadeInStoryboard.Children.Add(fadeInAnimation);
+
+            Storyboard.SetTarget(fadeInAnimation, targetElement);
+            Storyboard.SetTargetProperty(fadeInAnimation, "Opacity");
+
+            fadeInStoryboard.Begin();
+        }
+
+        private void AnimateToken(int playerIndex, int steps, int tokenIndex)
+        {
+            //Hämta korrekt token för att animera
+            Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
+
+            //Tona ut vald token innan den flyttas
+            ApplyFadeOutAnimation(playerToken, () => MovePlayer(playerIndex, steps, tokenIndex, playerToken));
+        }
+
+        //Separationen av AnimateToken och MovePlayer ger en mer korrekt ut- och intoningseffekt
+        private void MovePlayer(int playerIndex, int steps, int tokenIndex, Grid playerToken)
         {
             int currentPosition = players[playerIndex].GetTokenPosition(tokenIndex);
 
@@ -638,7 +693,7 @@ namespace FiaMedKnuff
                 int moveBack = PacesToMoveBack(currentPosition, path.Length, steps);
                 int newPositionOnBoard = currentPosition - moveBack;
                 players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
-                Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
+                playerToken = GetPlayerToken(playerIndex, tokenIndex);
                 var (newRow, newCol) = path[newPositionOnBoard];
                 SetTokenPosition(playerToken, newRow, newCol);
             }
@@ -666,13 +721,15 @@ namespace FiaMedKnuff
                 }
 
                 // Flytta pjäsen visuellt
-                Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
+                playerToken = GetPlayerToken(playerIndex, tokenIndex);
                 var (newRow, newCol) = path[newPositionOnBoard];
                 SetTokenPosition(playerToken, newRow, newCol);
                 CheckForOverlappingTokens(playerIndex, tokenIndex);
 
                 ResetTokenEffects(playerToken);
             }
+
+            ApplyFadeInAnimation(playerToken);
         }
         private void CheckForOverlappingTokens(int playerIndex, int tokenIndex)
         {
