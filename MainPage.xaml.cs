@@ -371,7 +371,10 @@ namespace FiaMedKnuff
 
         private void OnTokenTapped(object sender, TappedRoutedEventArgs e)
         {
-            Grid ClickToken = sender as Grid;
+            Grid clickedToken = sender as Grid;
+
+            // Avmarkera alla pjäser först
+            DeselectAllTokens();
 
             for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
             {
@@ -379,7 +382,7 @@ namespace FiaMedKnuff
                 {
                     Grid token = GetPlayerToken(playerIndex, tokenIndex);
 
-                    if (token == ClickToken)
+                    if (token == clickedToken)
                     {
                         if (playerIndex == currentPlayerIndex)
                         {
@@ -393,18 +396,32 @@ namespace FiaMedKnuff
 
                                 DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)}s token selected";
 
-                                HighlightSelectedToken(ClickToken);
+                                HighlightSelectedToken(clickedToken); // Markera den valda pjäsen
                             }
                         }
-                    }
-
-                    else
-                    {
-                        DiceRollResult.Text = $"It's {IndexToName(currentPlayerIndex)}s turn";
                     }
                 }
             }
         }
+
+
+        private void DeselectAllTokens()
+        {
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+
+                    // Återställ visuella effekter (ta bort highlight)
+                    ResetTokenEffects(token);
+                }
+            }
+
+            // Nollställ den markerade pjäsen
+            selectedTokenIndex = -1;
+        }
+
 
         private void EnableDiceForCurrentPlayer()
         {
