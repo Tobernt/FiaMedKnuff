@@ -10,6 +10,9 @@
     d:DesignWidth="550">
 
     <Grid Background="#350D0D" CornerRadius="10">
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="PopupTranslateTransform" />
+        </Grid.RenderTransform>
         <TextBlock Text="Highscore" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="50" FontWeight="Medium"/>
         <Button VerticalAlignment="Top" HorizontalAlignment="Right" Foreground="Black" Background="Red" Click="Exit_Highscore_Btn">X</Button>
 
