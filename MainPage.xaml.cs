@@ -642,7 +642,7 @@ namespace FiaMedKnuff
         }
 
         // Metod för att animera en tokens intoning
-        private void ApplyFadeInAnimation(UIElement targetElement)
+        private void ApplyFadeInAnimation(UIElement targetElement/*, Action onCompleted = null*/)
         {
             DoubleAnimation fadeInAnimation = new DoubleAnimation
             {
@@ -764,6 +764,7 @@ namespace FiaMedKnuff
                         players[otherPlayerIndex].PiecesInNest++; // Increment the opponent's PiecesInNest count
 
                         // Remove the token from the board visually
+                        ApplyFadeOutAnimation(otherTokenGrid);
                         RepopulateNest(otherPlayerIndex, otherTokenIndex);
 
                         // Optionally, display a message about the knockout
@@ -788,6 +789,7 @@ namespace FiaMedKnuff
                     if (tokenIndex == 1) SetTokenPosition(playerToken, 0, 1);
                     if (tokenIndex == 2) SetTokenPosition(playerToken, 1, 0);
                     if (tokenIndex == 3) SetTokenPosition(playerToken, 1, 1);
+                    ApplyFadeInAnimation(playerToken);
                     break;
 
                 case 1: // Blue player
@@ -795,6 +797,7 @@ namespace FiaMedKnuff
                     if (tokenIndex == 1) SetTokenPosition(playerToken, 0, 10);
                     if (tokenIndex == 2) SetTokenPosition(playerToken, 1, 9);
                     if (tokenIndex == 3) SetTokenPosition(playerToken, 1, 10);
+                    ApplyFadeInAnimation(playerToken);
                     break;
 
                 case 2: // Green player
@@ -802,6 +805,7 @@ namespace FiaMedKnuff
                     if (tokenIndex == 1) SetTokenPosition(playerToken, 9, 10);
                     if (tokenIndex == 2) SetTokenPosition(playerToken, 10, 9);
                     if (tokenIndex == 3) SetTokenPosition(playerToken, 10, 10);
+                    ApplyFadeInAnimation(playerToken);
                     break;
 
                 case 3: // Yellow player
@@ -809,6 +813,7 @@ namespace FiaMedKnuff
                     if (tokenIndex == 1) SetTokenPosition(playerToken, 9, 1);
                     if (tokenIndex == 2) SetTokenPosition(playerToken, 10, 0);
                     if (tokenIndex == 3) SetTokenPosition(playerToken, 10, 1);
+                    ApplyFadeInAnimation(playerToken);
                     break;
             }
         }
