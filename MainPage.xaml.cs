@@ -176,18 +176,21 @@ namespace FiaMedKnuff
                 {
                     int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                     player.MoveOutOfNest(tokenToMoveOut);
-                    MovePlayer(currentPlayerIndex, 0, tokenToMoveOut);
+                    MovePlayer(currentPlayerIndex, 0, tokenToMoveOut, GetPlayerToken(currentPlayerIndex, tokenToMoveOut));
+
                 }
                 else if (diceRoll == 6 && hasPiecesInNest)
                 {
                     int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
                     player.MoveOutOfNest(tokenToMoveOut);
-                    MovePlayer(currentPlayerIndex, 5, tokenToMoveOut);
+                    MovePlayer(currentPlayerIndex, 5, tokenToMoveOut, GetPlayerToken(currentPlayerIndex, tokenToMoveOut));
+
                 }
                 else if (hasPiecesOnBoard && !allPiecesInNestOrGoal)
                 {
                     int tokenOnBoard = GetNextTokenOnBoard(currentPlayerIndex);
-                    MovePlayer(currentPlayerIndex, diceRoll, tokenOnBoard);
+                    MovePlayer(currentPlayerIndex, diceRoll, tokenOnBoard, GetPlayerToken(currentPlayerIndex, tokenOnBoard));
+
                 }
 
                 if (diceRoll != 6)
