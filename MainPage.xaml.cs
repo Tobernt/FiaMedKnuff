@@ -261,8 +261,9 @@ namespace FiaMedKnuff
             if (clickedButton == YellowDiceBtn) YellowDice.ThrowDiceVisual(diceRoll);
 
             DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
-
-            bool hasPiecesOnBoard = players[currentPlayerIndex].HasPiecesOnBoard;
+            //Delays the visual of dice throw
+			await Task.Delay(1500);
+			bool hasPiecesOnBoard = players[currentPlayerIndex].HasPiecesOnBoard;
             bool hasPiecesInNest = players[currentPlayerIndex].HasPiecesInNest();
 
             // Automatically pass turn if all pieces are in the nest and dice roll isn't 1 or 6
