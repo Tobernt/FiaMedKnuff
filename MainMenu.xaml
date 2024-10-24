@@ -10,11 +10,20 @@
 
     <Grid Background="#4F2A00">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Start Game" Click="StartGame_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Foreground="#FFFFFF"  HorizontalAlignment="Center" Margin="0,5,0,5" FontWeight="ExtraBold" FontSize="18" FocusVisualSecondaryBrush="Black" Background="#FF840000"/>
+            <Button Content="Start Game" Click="StartGame_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" FontWeight="ExtraBold" FontSize="18" FocusVisualSecondaryBrush="Black" Background="#FF840000"/>
             <Button Content="High Score" Click="HighScore_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" FontSize="18" FontWeight="ExtraBold"/>
             <Button Content="Rules" Click="Rules_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" IsEnabled="False" FontSize="18" FontWeight="ExtraBold"/>
-            <Button Content="Quit" Click="Quit_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" IsEnabled="False" FontSize="18" FontWeight="ExtraBold"/>
+            <Button Content="Quit" Click="Quit_Click" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" Margin="0,5,0,5" FontSize="18" FontWeight="ExtraBold"/>
         </StackPanel>
+
+        <!-- HighScore and GameSettings Popups -->
         <userControls:HighScore_Popup x:Name="highScorePage" x:FieldModifier="public" Visibility="Collapsed" Height="700" Width="550"/>
+        <userControls:GameSettings_Popup x:Name="gameSettingsPopup" x:FieldModifier="public" Visibility="Collapsed"/>
+
+        <!-- Sound Button -->
+        <userControls:Sound_Button x:FieldModifier="public" Visibility="Visible"/>
+
+        <!-- Move the Back button to the bottom center of the screen -->
+        <Button x:Name="BackButton" Content="Back" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#840000" Foreground="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10,0,20" FontSize="18" FontWeight="ExtraBold" Visibility="Collapsed" Click="BackButton_Click"/>
     </Grid>
 </Page>

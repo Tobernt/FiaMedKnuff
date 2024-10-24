@@ -1,6 +1,4 @@
 using System;
-using Windows.ApplicationModel.Email.DataProvider;
-using Windows.UI.Xaml.Controls.Maps;
 
 namespace FiaMedKnuff
 {
@@ -14,11 +12,21 @@ namespace FiaMedKnuff
         private int currentPlayerIndex;
         private Random random;
 
-        public GameLogic()
+        public GameLogic(int totalPlayers, int totalAIPlayers)
         {
             // Initialize players and AI
-            players = new Player[2]; // Example: 2 human players
-            aiPlayers = new AIPlayer[2]; // Example: 2 AI players
+            players = new Player[totalPlayers];
+            aiPlayers = new AIPlayer[totalAIPlayers];
+            for (int i = 0; i < totalPlayers; i++)
+            {
+                players[i] = new Player($"Player {i + 1}");
+            }
+
+            for (int i = 0; i < totalAIPlayers; i++)
+            {
+                aiPlayers[i] = new AIPlayer($"AI {i + 1}");
+            }
+
             currentPlayerIndex = 0;
             random = new Random();
         }
@@ -33,31 +41,43 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Handles the logic for processing a turn based on dice roll.
+        /// Moves the player by the given number of steps.
         /// </summary>
-        /// <param name="diceRoll">The result of the dice roll.</param>
-        public void ProcessTurn(int diceRoll)
+        /// <param name="playerIndex">The index of the player to move.</param>
+        /// <param name="steps">The number of steps to move forward.</param>
+        public void MovePlayer(int playerIndex, int steps)
         {
-            if (currentPlayerIndex < players.Length)
+            if (playerIndex < players.Length)
             {
-                // It's a human player's turn
-                players[currentPlayerIndex].Move(diceRoll);
+                players[playerIndex].Move(steps);
             }
             else
             {
-                // It's an AI's turn
-                int aiIndex = currentPlayerIndex - players.Length;
-                aiPlayers[aiIndex].Move(diceRoll);
+                int aiIndex = playerIndex - players.Length;
+                aiPlayers[aiIndex].Move(steps);
             }
+        }
 
-            // Move to the next turn
-            NextTurn();
+        /// <summary>
+        /// Checks if the current player has won the game.
+        /// </summary>
+        public bool HasWon(int playerIndex)
+        {
+            return players[playerIndex].HasWon;
+        }
+
+        /// <summary>
+        /// Gets the current player's index.
+        /// </summary>
+        public int GetCurrentPlayerIndex()
+        {
+            return currentPlayerIndex;
         }
 
         /// <summary>
         /// Moves to the next player's turn.
         /// </summary>
-        private void NextTurn()
+        public void NextTurn()
         {
             currentPlayerIndex = (currentPlayerIndex + 1) % (players.Length + aiPlayers.Length);
         }

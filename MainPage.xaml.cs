@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,6 +6,13 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Shapes;
 using FiaMedKnuff;
+using Windows.Media.PlayTo;
+using Windows.UI.Xaml.Input;
+using Windows.UI;
+using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace FiaMedKnuff
 {
@@ -16,272 +23,1075 @@ namespace FiaMedKnuff
         private int totalPlayers = 4;
         private Random random;
         DateTime startTime = DateTime.Now;
+        private int selectedTokenIndex = -1;
+        private int diceRoll;
+        private bool stopGame = false;
 
         // Paths for each player, defined as (row, column) positions on the grid.
         private readonly (int row, int col)[] RedPath = new (int row, int col)[]
         {
             // Starting from Red quadrant at (4, 0)
-            (4, 0), 
-            (4, 1), (4, 2), (4, 3), (4, 4),          // Move right in Red quadrant
-            (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
-            (0, 5), (0, 6),                          // Move Right in upper blue quadrant
-            (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
-            (4, 7), (4, 8), (4, 9), (4, 10),         // Move Right in blue quadrant
-            (5, 10), (6, 10),                        // Move Down into green quadrant
-            (6, 9), (6, 8), (6, 7),                  // Move Left in green quadrant
-            (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), // Move Down in green quadrant
-            (10, 5), (10, 4),                        // Move left into yellow quadrant
-            (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
-            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0),  // Move left in yellow quadrant
-            (5, 0), (5, 1),(5, 2),(5,3),(5,4),(5,5)  // Red finishing stretch
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), (0, 6),
+            (1, 6), (2, 6), (3, 6), (4, 6), (4, 7), (4, 8),
+            (4, 9), (4, 10), (5, 10), (6, 10), (6, 9), (6, 8),
+            (6, 7), (6, 6), (7, 6), (8, 6), (9, 6), (10, 6),
+            (10, 5), (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
+            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0), (5, 1),
+            (5, 2), (5,3),(5,4),(5,5)
         };
 
         private readonly (int row, int col)[] BluePath = new (int row, int col)[]
         {
             // Starting from Blue quadrant at (0, 6), moving down
-            (0, 6),
-            (1, 6), (2, 6), (3, 6), (4, 6),   // Move Down in blue quadrant
-            (4, 7), (4, 8), (4, 9), (4, 10),         // Move Right in blue quadrant
-            (5, 10), (6, 10),                        // Move Down into green quadrant
-            (6, 9), (6, 8), (6, 7),                  // Move Left in green quadrant
-            (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), // Move Down in green quadrant
-            (10, 5), (10, 4),                        // Move left into yellow quadrant
-            (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
-            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),  // Move left in yellow quadrant
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
-            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),  // Move Up in Red quadrant
-            (1,5), (2,5), (3,5), (4,5), (5,5)        // Blue finishing stretch
+            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6),
+            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10),
+            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6),
+            (7, 6), (8, 6), (9, 6), (10, 6), (10, 5),
+            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
+            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),
+            (1,5), (2,5), (3,5), (4,5), (5,5)
         };
-
 
         private readonly (int row, int col)[] YellowPath = new (int row, int col)[]
         {
-            // Starting from Yellow quadrant at (10, 4)
-            (10, 4),                                 // Move left into yellow quadrant
-            (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
-            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),  // Move left in yellow quadrant
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
-            (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
-            (0, 5), (0, 6),                          // Move Right in upper blue quadrant
-            (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
-            (4, 7), (4, 8), (4, 9), (4, 10),         // Move Right in blue quadrant
-            (5, 10), (6, 10),                        // Move Down into green quadrant
-            (6, 9), (6, 8), (6, 7),                  // Move Left in green quadrant
-            (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), // Move Down in green quadrant
-            (10,5), (9,5), (8,5), (6,5),(5,5)        // Yellow finishing stretch
+            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
+            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),
+            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6),
+            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10),
+            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6),
+            (7, 6), (8, 6), (9, 6), (10, 6), (10,5),
+            (9,5), (8,5),(7, 5), (6,5),(5,5)
         };
-
-
 
         private readonly (int row, int col)[] GreenPath = new (int row, int col)[]
         {
-            // Starting from Green quadrant at (6, 10)
-            (6, 10), 
-            (6, 9), (6, 8), (6, 7),         // Move Left in green quadrant
-            (6, 6), (7, 6), (8, 6), (9, 6), (10, 6), // Move Down in green quadrant
-            (10, 5), (10, 4),                        // Move left into yellow quadrant
-            (9, 4), (8, 4),(7, 4),                   // Move up in yellow quadrant
-            (6, 4), (6, 3), (6, 2), (6, 1), (6, 0), (5, 0), // Move left in yellow quadrant
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),  // Move right in Red quadrant
-            (3, 4), (2, 4), (1, 4), (0, 4),          // Move Up in Red quadrant
-            (0, 5), (0, 6),                          // Move Right in upper blue quadrant
-            (1, 6), (2, 6), (3, 6), (4, 6),          // Move Down in blue quadrant
-            (4, 7), (4, 8), (4, 9), (4, 10),         // Move Right in blue quadrant
-            (5, 10),(5, 9), (5, 8), (5, 7),(5, 6), (5, 5) // Green finishing stretch
-		};
+            (6, 10), (6, 9), (6, 8), (6, 7), (6, 6),
+            (7, 6), (8, 6), (9, 6), (10, 6), (10, 5),
+            (10, 4), (9, 4), (8, 4), (7, 4), (6, 4),
+            (6, 3), (6, 2), (6, 1), (6, 0), (5, 0),
+            (4, 0), (4, 1), (4, 2), (4, 3), (4, 4),
+            (3, 4), (2, 4), (1, 4), (0, 4), (0, 5),
+            (0, 6), (1, 6), (2, 6), (3, 6), (4, 6),
+            (4, 7), (4, 8), (4, 9), (4, 10), (5, 10),
+            (5, 9), (5, 8), (5, 7),(5, 6), (5, 5)
+        };
+
 
         public MainPage()
-        {
-            this.InitializeComponent();
+		{
+			this.InitializeComponent();
+			random = new Random();
+        
+		}
+    
+		public MainPage(List<Player.PlayerType> playerTypes)
+		{
+			this.InitializeComponent();
+			random = new Random();
 
-            Player red = new Player("red"); // move to gamelogic later
-            Player blue = new Player("blue");
-            Player green = new Player("green");
-            Player yellow = new Player("yellow");
-            DateTime startTime = DateTime.Now;
-            players = new Player[] { red, blue, green, yellow };
-            random = new Random();
-            currentPlayerIndex = random.Next(0, 4); // Randomizes initial starting player
-			DiceIsEnable(currentPlayerIndex);
-        }
+			// Initialize players using the passed player types
+			players = new Player[]
+			{
+		        new Player("red") { Type = playerTypes[0] },
+		        new Player("blue") { Type = playerTypes[1] },
+		        new Player("green") { Type = playerTypes[2] },
+		        new Player("yellow") { Type = playerTypes[3] }
+			};
 
+			currentPlayerIndex = random.Next(0, 4);
+			DiceIsEnable(currentPlayerIndex);  // Continue with game logic
+		}
         private void DiceIsEnable(int currentPlayerIndex)
         {
-			//Enables only one dice at the time
-			Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
+            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
+            while (players[currentPlayerIndex].Type == Player.PlayerType.None)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+            }
             foreach (Button button in diceButtons)
             {
                 button.IsEnabled = false;
+                button.Visibility = Visibility.Collapsed;
             }
-            if(currentPlayerIndex >= 0 && currentPlayerIndex < diceButtons.Length) 
+            diceButtons[currentPlayerIndex].IsEnabled = false;
+            diceButtons[currentPlayerIndex].Visibility = Visibility.Visible;
+
+            if (currentPlayerIndex >= 0 && currentPlayerIndex < diceButtons.Length)
             {
                 diceButtons[currentPlayerIndex].IsEnabled = true;
             }
-        }
-        
-        private void RollDice_Click(object sender, RoutedEventArgs e)
-        {
-            // Rolls the dice
-            int diceRoll = RollDice();
 
-            // Displays the rolled dice on the current players turn
-			Button clickedButton = sender as Button;
-            if (clickedButton == RedDiceBtn) RedDice.ThrowDiceVisual(diceRoll); 
-			if (clickedButton == BlueDiceBtn) BlueDice.ThrowDiceVisual(diceRoll);
+            // Disable token selection until dice is rolled
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+                    token.IsTapEnabled = false; // Disable tapping on tokens initially
+                }
+            }
+		}
+    
+        private async Task HandleComputerTurn()
+        {
+            var player = players[currentPlayerIndex];
+
+            if (stopGame)
+                return;
+
+            // add some delay for piece_place sound to finish 
+            await Task.Delay(200);
+
+            // Runs atleast once
+            do
+            {
+                bool hasPiecesOnBoard = player.HasPiecesOnBoard;
+                bool hasPiecesInNest = player.HasPiecesInNest();
+                bool allPiecesInNestOrGoal = player.AllPiecesInNestOrGoal();
+
+                // Roll dice for ai
+                diceRoll = RollDice();
+
+                // Play dice sound
+                SoundManager.PlaySound(SoundType.DiceRoll);
+
+                if (currentPlayerIndex == 0) RedDice.ThrowDiceVisual(diceRoll);
+                if (currentPlayerIndex == 1) BlueDice.ThrowDiceVisual(diceRoll);
+                if (currentPlayerIndex == 2) GreenDice.ThrowDiceVisual(diceRoll);
+                if (currentPlayerIndex == 3) YellowDice.ThrowDiceVisual(diceRoll);
+
+                Debug.WriteLine("Computer rolled " + diceRoll);
+
+                await Task.Delay(800);
+
+                DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
+
+                // Logic for moving out of the nest
+                if (diceRoll == 1 && hasPiecesInNest)
+                {
+                    int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
+                    player.MoveOutOfNest(tokenToMoveOut);
+                    MovePlayer(currentPlayerIndex, 0, tokenToMoveOut, GetPlayerToken(currentPlayerIndex, tokenToMoveOut));
+
+                }
+                else if (diceRoll == 6 && hasPiecesInNest)
+                {
+                    int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
+                    player.MoveOutOfNest(tokenToMoveOut);
+                    MovePlayer(currentPlayerIndex, 5, tokenToMoveOut, GetPlayerToken(currentPlayerIndex, tokenToMoveOut));
+
+                }
+                else if (hasPiecesOnBoard && !allPiecesInNestOrGoal)
+                {
+                    int tokenOnBoard = GetNextTokenOnBoard(currentPlayerIndex);
+                    MovePlayer(currentPlayerIndex, diceRoll, tokenOnBoard, GetPlayerToken(currentPlayerIndex, tokenOnBoard));
+
+                }
+
+                if (diceRoll != 6)
+                {
+                    break;
+                }
+
+                DiceRollResult.Text += $" ({IndexToName(currentPlayerIndex)} gets to roll again!)";
+
+                await Task.Delay(1000);
+            }
+            while (diceRoll == 6);
+
+            // Pass the turn to the next player after computer finishes
+            currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+
+            // Skip None-type players
+            while (players[currentPlayerIndex].Type == Player.PlayerType.None)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+                Debug.WriteLine($"Skipped {players[currentPlayerIndex].Name} because type is {players[currentPlayerIndex].Type}.");
+            }
+
+            DiceIsEnable(currentPlayerIndex);
+
+            // If the next player is a computer, handle their turn
+            if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
+            {
+                Debug.WriteLine("Next player is Computer, handling their turn.");
+                await HandleComputerTurn();
+            }
+        }
+
+        private async void RollDice_Click(object sender, RoutedEventArgs e)
+        {
+            DeselectAllTokens();
+            // Ensure that the current player is valid
+            while (players[currentPlayerIndex].Type == Player.PlayerType.None)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+            }
+            bool hasPiecesOnBoardLocal = players[currentPlayerIndex].HasPiecesOnBoard;
+
+            // Check if the current player is a computer and handle their turn 
+            if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
+            {
+                Debug.WriteLine("Current player is Computer, handling their turn.");
+                await HandleComputerTurn();
+                return;
+            }
+
+            // Disable dice after rolling to prevent multiple rolls
+            DisableDiceForCurrentPlayer();
+            if (hasPiecesOnBoardLocal && selectedTokenIndex == -1)
+            {
+                DiceRollResult.Text = $"(Click {IndexToName(currentPlayerIndex)} token to move)";
+                SoundManager.PlaySound(SoundType.Error);
+            }
+
+            diceRoll = RollDice();
+
+            SoundManager.PlaySound(SoundType.DiceRoll);
+            // Display the result of the dice roll
+            Button clickedButton = sender as Button;
+            if (clickedButton == RedDiceBtn) RedDice.ThrowDiceVisual(diceRoll);
+            if (clickedButton == BlueDiceBtn) BlueDice.ThrowDiceVisual(diceRoll);
             if (clickedButton == GreenDiceBtn) GreenDice.ThrowDiceVisual(diceRoll);
             if (clickedButton == YellowDiceBtn) YellowDice.ThrowDiceVisual(diceRoll);
-			DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
 
-            //Checks if current player have the piece on the board or in the nest
-            if (!players[currentPlayerIndex].HasStarted)
+            DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} rolled a {diceRoll}";
+
+            bool hasPiecesOnBoard = players[currentPlayerIndex].HasPiecesOnBoard;
+            bool hasPiecesInNest = players[currentPlayerIndex].HasPiecesInNest();
+
+            // Automatically pass turn if all pieces are in the nest and dice roll isn't 1 or 6
+            if (hasPiecesInNest && !hasPiecesOnBoard && diceRoll != 1 && diceRoll != 6)
             {
-                if(diceRoll == 1 || diceRoll == 6)
+                PassTurnToNextPlayer();
+                return;
+            }
+
+            // Handle roll of 6 with dialog options
+            if (diceRoll == 6)
+            {
+                if (hasPiecesInNest || hasPiecesOnBoard)
                 {
-                    players[currentPlayerIndex].HasStarted = true;
-					MovePlayer(currentPlayerIndex, diceRoll - 1);
-				}
+                    // Using radio buttons in the content dialog for the three options
+                    StackPanel contentPanel = new StackPanel();
+                    RadioButton moveOneTokenOut = new RadioButton { Content = "Move 1 token out 6 steps", GroupName = "Options", IsChecked = true };
+                    RadioButton moveTwoTokensOut = new RadioButton { Content = "Move 2 tokens 1 step each", GroupName = "Options" };
+                    RadioButton moveOnBoardToken = new RadioButton { Content = "Move a token on the board 6 steps", GroupName = "Options" };
+
+                    contentPanel.Children.Add(moveOneTokenOut);
+                    contentPanel.Children.Add(moveTwoTokensOut);
+                    contentPanel.Children.Add(moveOnBoardToken);
+
+                    ContentDialog choiceDialog = new ContentDialog
+                    {
+                        Title = "Move Choice",
+                        Content = contentPanel,
+                        PrimaryButtonText = "Confirm",
+                        CloseButtonText = "Cancel"
+                    };
+
+                    ContentDialogResult result = await choiceDialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        if (moveOneTokenOut.IsChecked == true)
+                        {
+                            // Move 1 token out 6 steps
+                            int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
+                            players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
+                            AnimateToken(currentPlayerIndex, 5, tokenToMoveOut);
+
+                            // Disable token selection and allow rolling again
+                            DisableTokenSelection();  // Disable further token movement after moving out
+                            PassTurnOrEnableRollForSix();  // Check if they should roll again
+                        }
+                        else if (moveTwoTokensOut.IsChecked == true)
+                        {
+                            // Move 2 tokens out 1 step each
+                            int firstToken = GetNextTokenInNest(currentPlayerIndex);
+                            players[currentPlayerIndex].MoveOutOfNest(firstToken);
+                            AnimateToken(currentPlayerIndex, 0, firstToken);
+                            DisableTokenSelection();
+                            if (players[currentPlayerIndex].HasPiecesInNest())
+                            {
+                                int secondToken = GetNextTokenInNest(currentPlayerIndex);
+                                players[currentPlayerIndex].MoveOutOfNest(secondToken);
+                                AnimateToken(currentPlayerIndex, 0, secondToken);
+                                DisableTokenSelection();
+                            }
+
+                            // Disable token selection and allow rolling again
+                            DisableTokenSelection();  // Disable further token movement after moving out
+                            PassTurnOrEnableRollForSix();  // Check if they should roll again
+                        }
+                        else if (moveOnBoardToken.IsChecked == true)
+                        {
+                            // Enable selection for moving a token on the board 6 steps
+                            EnableTokenSelectionForSixSteps(currentPlayerIndex);
+                            return;  // Wait for token selection
+                        }
+                    }
+                }
                 else
                 {
-                    DiceRollResult.Text += " (Player must roll a 1 or 6 to start moving";
+                    // If only pieces on board, allow moving one of them 6 steps
+                    EnableTokenSelectionForSixSteps(currentPlayerIndex);
+                    return;  // Wait for token selection, don't pass the turn yet
+                }
+            }
+            else if (diceRoll == 1)
+            {
+                // Handle roll of 1 in a similar fashion
+                if (hasPiecesInNest && hasPiecesOnBoard)
+                {
+                    StackPanel contentPanel = new StackPanel();
+                    RadioButton moveOneTokenOut = new RadioButton { Content = "Move 1 token out 1 step", GroupName = "Options", IsChecked = true };
+                    RadioButton moveOnBoardToken = new RadioButton { Content = "Move a token on the board 1 step", GroupName = "Options" };
+
+                    contentPanel.Children.Add(moveOneTokenOut);
+                    contentPanel.Children.Add(moveOnBoardToken);
+
+                    ContentDialog choiceDialog = new ContentDialog
+                    {
+                        Title = "Move Choice",
+                        Content = contentPanel,
+                        PrimaryButtonText = "Confirm",
+                        CloseButtonText = "Cancel"
+                    };
+
+                    ContentDialogResult result = await choiceDialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        if (moveOneTokenOut.IsChecked == true)
+                        {
+                            int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
+                            players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
+                            AnimateToken(currentPlayerIndex, 0, tokenToMoveOut);
+
+                            DisableTokenSelection();  // Disable further token movement
+                            PassTurnOrEnableRollForSix();  // Check if they should roll again or pass
+                        }
+                        else if (moveOnBoardToken.IsChecked == true)
+                        {
+                            EnableTokenSelectionForOneStep(currentPlayerIndex);  // Allow moving a token on the board by 1 step
+                            return;  // Wait for token selection, don't pass the turn yet
+                        }
+                    }
+                }
+                else if (hasPiecesInNest && !hasPiecesOnBoard)
+                {
+                    int tokenToMoveOut = GetNextTokenInNest(currentPlayerIndex);
+                    players[currentPlayerIndex].MoveOutOfNest(tokenToMoveOut);
+                    AnimateToken(currentPlayerIndex, 0, tokenToMoveOut);
+
+                    DisableTokenSelection();  // Disable further token movement
+                    PassTurnOrEnableRollForSix();  // Check if they should roll again or pass
+                }
+                else if (!hasPiecesInNest && hasPiecesOnBoard)
+                {
+                    EnableTokenSelectionForOneStep(currentPlayerIndex);  // Allow moving a token on the board by 1 step
+                    return;  // Wait for token selection, don't pass the turn yet
                 }
             }
             else
             {
-				// Move the current player based on the dice roll
-				MovePlayer(currentPlayerIndex, diceRoll);
+                EnableTokenSelection(currentPlayerIndex);  // Enable selecting a token to move after rolling
+            }
+
+            if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
+            {
+                await HandleComputerTurn();
+                return;
+            }
+        }
+
+        private void PassTurnOrEnableRollForSix()
+        {
+            if (diceRoll == 6)
+            {
+                // Allow player to roll again after rolling a 6
+                DiceRollResult.Text += " (Player gets to roll again!)";
+                EnableDiceForCurrentPlayer(); // Allow rolling again
+            }
+            else
+            {
+                diceRoll = 0;  // Reset dice roll if not 6
+                PassTurnToNextPlayer(); // Pass turn to the next player
+            }
+        }
+
+        private void EnableTokenSelection(int playerIndex)
+        {
+            // Make the current player's tokens selectable
+            for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+            {
+                Grid token = GetPlayerToken(playerIndex, tokenIndex);
+                int tokenPosition = players[playerIndex].GetTokenPosition(tokenIndex);
+
+                // Allow selection of tokens in the nest (-1) ONLY if a 1 or 6 is rolled, otherwise skip nest tokens
+                if (tokenPosition >= 0 || (tokenPosition == -1 && (diceRoll == 1 || diceRoll == 6)))
+                {
+                    token.IsTapEnabled = true;  // Make the token tappable if valid
+                }
+                else
+                {
+                    token.IsTapEnabled = false; // Ensure nest tokens are not tappable unless 1 or 6 is rolled
+                }
+            }
+
+            // Prompt the player to choose a token
+            DiceRollResult.Text = $"Select a token to move.";
+        }
+
+        private void EnableTokenSelectionForSixSteps(int playerIndex)
+        {
+            for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+            {
+                Grid token = GetPlayerToken(playerIndex, tokenIndex);
+                int tokenPosition = players[playerIndex].GetTokenPosition(tokenIndex);
+
+                // Only enable pieces already on the board (position >= 0) for moving 6 steps
+                if (tokenPosition >= 0 && tokenPosition < 99)
+                {
+                    token.IsTapEnabled = true;
+                }
+            }
+
+            // Prompt the player to choose a token to move 6 steps
+            DiceRollResult.Text = $"Select a token on the board to move 6 steps.";
+        }
+
+
+        private void EnableTokenSelectionForOneStep(int playerIndex)
+        {
+            for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+            {
+                Grid token = GetPlayerToken(playerIndex, tokenIndex);
+                int tokenPosition = players[playerIndex].GetTokenPosition(tokenIndex);
+
+                // Only enable pieces already on the board (position >= 0) for moving 1 step
+                if (tokenPosition >= 0 && tokenPosition < 99)
+                {
+                    token.IsTapEnabled = true;
+                }
+                else
+                {
+                    token.IsTapEnabled = false; // Ensure that tokens in the nest aren't selectable
+                }
+            }
+
+            // Prompt the player to choose a token to move 1 step
+            DiceRollResult.Text = $"Select a token on the board to move 1 step.";
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+		{
+			base.OnNavigatedTo(e);
+
+			// Ensure we received player types from the game settings
+			if (e.Parameter is List<Player.PlayerType> playerTypes)
+			{
+				// Call the overloaded constructor to initialize players with the correct types
+				players = new Player[]
+				{
+			        new Player("red") { Type = playerTypes[0] },
+			        new Player("blue") { Type = playerTypes[1] },
+			        new Player("green") { Type = playerTypes[2] },
+			        new Player("yellow") { Type = playerTypes[3] }
+				};
+
+                // Set a random player as starting
+                currentPlayerIndex = random.Next(0, players.Length);
+
+                // If random player wasnt of type Player, look for the first player of type Player
+                if (players[currentPlayerIndex].Type != Player.PlayerType.Player)
+                {
+                    for (int i = 0; i < players.Length; i++)
+                    {
+                        if (players[i].Type == Player.PlayerType.Player)
+                        {
+                            currentPlayerIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                DiceIsEnable(currentPlayerIndex);
 			}
-            // Move to the next player
-            currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
-			DiceIsEnable(currentPlayerIndex);
+			for (int i = 0; i < players.Length; i++)
+			{
+				Debug.WriteLine($"MainPage - Player {i + 1} type: {players[i].Type}");
+			}
 		}
+
+        //Method applying new strokethickness to tapped token
+        private void HighlightSelectedToken(Grid tokenGrid)
+        {
+            AddDropShadow(tokenGrid);
+
+            foreach (var child in tokenGrid.Children)
+            {
+                if (child is Rectangle rectangle)
+                {
+                    rectangle.StrokeThickness = 5;
+                }
+
+                else if (child is Ellipse ellipse)
+                {
+                    ellipse.StrokeThickness = 5;
+                }
+            }
+        }
+
+        //Method applying shadoweffect to tapped token
+        private void AddDropShadow(Grid targetElement)
+        {
+            var compositor = Window.Current.Compositor;
+
+            var dropShadow = compositor.CreateDropShadow();
+
+            dropShadow.Color = Colors.Black;
+            dropShadow.BlurRadius = 15;
+            dropShadow.Opacity = (float)0.4;
+
+            var shadowVisual = compositor.CreateSpriteVisual();
+            shadowVisual.Size = new System.Numerics.Vector2((float)targetElement.ActualWidth, (float)targetElement.ActualHeight);
+            shadowVisual.Shadow = dropShadow;
+
+            if (targetElement.Children[1] is Ellipse ellipse)
+            {
+                dropShadow.Mask = ellipse.GetAlphaMask();
+            }
+
+            else if (targetElement.Children[0] is Rectangle rectangle)
+            {
+                dropShadow.Mask = rectangle.GetAlphaMask();
+            }
+
+            ElementCompositionPreview.SetElementChildVisual(targetElement, shadowVisual);
+        }
+
+        //Method removing added effects to tapped token
+        private void ResetTokenEffects(Grid tokenGrid)
+        {
+            ElementCompositionPreview.SetElementChildVisual(tokenGrid, null);
+
+            foreach (var child in tokenGrid.Children)
+            {
+                if (child is Rectangle rectangle)
+                {
+                    rectangle.StrokeThickness = 3;
+                }
+
+                else if (child is Ellipse ellipse)
+                {
+                    ellipse.StrokeThickness = 3;
+                }
+            }
+        }
+
+        private void Chosen_Token(object sender, TappedRoutedEventArgs e)
+        {
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+
+                    token.Tapped += OnTokenTapped;
+                }
+            }
+        }
+
+        private void OnTokenTapped(object sender, TappedRoutedEventArgs e)
+        {
+            Grid clickedToken = sender as Grid;
+            // Avmarkera alla pjäser först
+            DeselectAllTokens();
+
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+
+                    if (token == clickedToken && playerIndex == currentPlayerIndex)
+                    {
+                        int tokenPosition = players[playerIndex].GetTokenPosition(tokenIndex);
+
+                        // If the token is in the nest and the player rolled a 1 or 6, move it out of the nest
+                        if (tokenPosition == -1 && (diceRoll == 1 || diceRoll == 6))
+                        {
+                            players[currentPlayerIndex].MoveOutOfNest(tokenIndex);
+                            AnimateToken(currentPlayerIndex, 0, tokenIndex);  // Move to the start position
+                            DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} moved a token out of the nest!";
+                        }
+                        // If the token is on the board, move it based on the dice roll
+                        else if (tokenPosition >= 0 && tokenPosition != 99)
+                        {
+                            AnimateToken(currentPlayerIndex, diceRoll, tokenIndex);
+                            DiceRollResult.Text = $"{IndexToName(currentPlayerIndex)} moved a token!";
+                        }
+
+                        // Disable token selection after a move
+                        selectedTokenIndex = -1;
+                        DisableTokenSelection();
+
+                        // Reset the dice roll value after a move
+                        diceRoll = 0;
+
+                        // If the player rolled a 6, allow reroll after moving
+                        if (diceRoll == 6)
+                        {
+                            DiceRollResult.Text += " (Player gets to roll again!)";
+                            EnableDiceForCurrentPlayer(); // Allow reroll
+                        }
+                        else
+                        {
+                            PassTurnToNextPlayer(); // Pass the turn if it's not a 6
+                        }
+
+                        return; // Exit after handling the token tap
+                    }
+                    HighlightSelectedToken(clickedToken); // Markera den valda pjäsen
+                }
+            }
+        }
+        private void DeselectAllTokens()
+        {
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+
+                    // Återställ visuella effekter (ta bort highlight)
+                    ResetTokenEffects(token);
+                }
+            }
+
+            // Nollställ den markerade pjäsen
+            selectedTokenIndex = -1;
+        }
+        private void PassTurnToNextPlayer()
+        {
+            currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+            diceRoll = 0;  // Reset the dice roll here
+
+            // if current player is none get next good player
+            while (players[currentPlayerIndex].Type == Player.PlayerType.None)
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+                Debug.WriteLine($"Skipped {players[currentPlayerIndex].Name} because type is None.");
+            }
+
+            if (players[currentPlayerIndex].Type == Player.PlayerType.Computer)
+            {
+                Debug.WriteLine("Next player is Computer, handling their turn.");
+                _ = HandleComputerTurn();
+            }
+
+            DiceIsEnable(currentPlayerIndex); // Enable the next player's dice
+        }
+
+
+        private void PassTurnIfNeeded(bool hasMoved)
+        {
+            // Check if all pieces are in the nest
+            bool allPiecesInNest = players[currentPlayerIndex].HasPiecesInNest();
+
+            // If the player has moved, or all pieces are in the nest and they didn't roll 1 or 6, pass the turn
+            if (hasMoved || (allPiecesInNest && (diceRoll != 1 && diceRoll != 6)))
+            {
+                currentPlayerIndex = (currentPlayerIndex + 1) % totalPlayers;
+                diceRoll = 0;  // Reset the dice roll here
+                DiceIsEnable(currentPlayerIndex); // Enable the next player's dice
+            }
+            else
+            {
+                // If the player cannot move (all pieces in nest) and rolled 1 or 6, they get another chance
+                DiceIsEnable(currentPlayerIndex); // Keep the current player's turn
+            }
+        }
+
+
+        private void DisableTokenSelection()
+        {
+            // Disable tapping on tokens for all players
+            for (int playerIndex = 0; playerIndex < players.Length; playerIndex++)
+            {
+                for (int tokenIndex = 0; tokenIndex < 4; tokenIndex++)
+                {
+                    Grid token = GetPlayerToken(playerIndex, tokenIndex);
+                    token.IsTapEnabled = false;
+                }
+            }
+        }
+
+        private void DisableDiceForCurrentPlayer()
+        {
+            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
+            diceButtons[currentPlayerIndex].IsEnabled = false;
+        }
+
+        private void EnableDiceForCurrentPlayer()
+        {
+            Button[] diceButtons = { RedDiceBtn, BlueDiceBtn, GreenDiceBtn, YellowDiceBtn };
+            diceButtons[currentPlayerIndex].IsEnabled = true;
+        }
 
         private int RollDice()
         {
-            return random.Next(1, 7); // Roll a number between 1 and 6
+            return random.Next(1, 7);
         }
 
-        private int PlayerPathToNum(int playerIndex)
+        //Metod för att animera en tokens uttoning
+        private void ApplyFadeOutAnimation(UIElement targetElement, Action onCompleted = null)
         {
-            return 0;
-        }
-
-        private void MovePlayer(int playerIndex, int steps)
-        {
-
-			// Get the current position of the player
-            players[playerIndex].Position += steps;
-            int position = players[playerIndex].Position; //Dice roll
-
-			// Get the path based on the player index
-			var path = GetPlayerPath(playerIndex);
-
-            // Ensure the position is within the bounds of the path
-            if (position >= path.Length)
+            DoubleAnimation fadeOutAnimation = new DoubleAnimation
             {
-                position = path.Length - 1; // Stop at the last position
+                From = 1,
+                To = 0,
+                Duration = new Duration(TimeSpan.FromSeconds(0.5))
+            };
+
+            Storyboard fadeOutStoryboard = new Storyboard();
+            fadeOutStoryboard.Children.Add(fadeOutAnimation);
+
+            Storyboard.SetTarget(fadeOutAnimation, targetElement);
+            Storyboard.SetTargetProperty(fadeOutAnimation, "Opacity");
+
+            if (onCompleted != null)
+            {
+                fadeOutStoryboard.Completed += (s, e) => onCompleted();
             }
 
-            // Update moves for player
-            players[playerIndex].Moves += 1;
+            fadeOutStoryboard.Begin();
+        }
 
-            for (int i = 0; i < players.Length; i++)
+        // Metod för att animera en tokens intoning
+        private void ApplyFadeInAnimation(UIElement targetElement/*, Action onCompleted = null*/)
+        {
+            DoubleAnimation fadeInAnimation = new DoubleAnimation
             {
-                if (playerIndex == i) // make sure we're not checking players own piece
+                From = 0,
+                To = 1,
+                Duration = new Duration(TimeSpan.FromSeconds(0.5))
+            };
+
+            Storyboard fadeInStoryboard = new Storyboard();
+            fadeInStoryboard.Children.Add(fadeInAnimation);
+
+            Storyboard.SetTarget(fadeInAnimation, targetElement);
+            Storyboard.SetTargetProperty(fadeInAnimation, "Opacity");
+
+            fadeInStoryboard.Begin();
+        }
+
+        private void AnimateToken(int playerIndex, int steps, int tokenIndex)
+        {
+            //Hämta korrekt token för att animera
+            Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
+
+            //Tona ut vald token innan den flyttas
+            ApplyFadeOutAnimation(playerToken, () => MovePlayer(playerIndex, steps, tokenIndex, playerToken));
+        }
+
+        //Separationen av AnimateToken och MovePlayer ger en mer korrekt ut- och intoningseffekt
+        private void MovePlayer(int playerIndex, int steps, int tokenIndex, Grid playerToken)
+        {
+            int currentPosition = players[playerIndex].GetTokenPosition(tokenIndex);
+
+            // Om pjäsen redan är i mål, gör inget
+            if (currentPosition == 99)
+            {
+                return;
+            }
+
+            // Flytta pjäsen från boet till start om den fortfarande är i boet
+            if (currentPosition == -1)
+            {
+                players[playerIndex].SetTokenPosition(tokenIndex, 0);
+                players[playerIndex].PiecesInNest--;
+            }
+            else if (currentPosition + steps > GetPlayerPath(playerIndex).Length - 1)
+            {
+                // Om kastet gör att pjäsen går förbi målet, flytta tillbaka överflödiga steg
+                var path = GetPlayerPath(playerIndex);
+                int moveBack = PacesToMoveBack(currentPosition, path.Length, steps);
+                int newPositionOnBoard = currentPosition - moveBack;
+                players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
+                playerToken = GetPlayerToken(playerIndex, tokenIndex);
+                var (newRow, newCol) = path[newPositionOnBoard];
+                SetTokenPosition(playerToken, newRow, newCol);
+            }
+            else
+            {
+                // Spela upp ljud för pjäs rörelse
+                SoundManager.PlaySound(SoundType.PieceMove);
+
+                // Flytta pjäsen framåt med antal steg
+                int newPositionOnBoard = currentPosition + steps;
+                var path = GetPlayerPath(playerIndex);
+
+                if (newPositionOnBoard >= path.Length)
                 {
-                    continue;
+                    newPositionOnBoard = path.Length - 1;
                 }
 
-                if (players[i].Position >= GetPlayerPath(i).Length)
-                    players[i].Position = GetPlayerPath(i).Length - 1;
+                players[playerIndex].SetTokenPosition(tokenIndex, newPositionOnBoard);
 
-                var (playerR, playerC) = GetPlayerPath(playerIndex)[position]; // get players piece row & cell
-                var (occupierR, occupierC) = GetPlayerPath(i)[players[i].Position]; // get other players piece row & cell
-                Debug.WriteLine($"Player {IndexToName(i)} with step {players[i].Position} is at {occupierR} {occupierC} | Current move: {playerR} {playerC} {players[playerIndex].Moves}");
-
-                if (playerR == occupierR && playerC == occupierC)
+                // Kontrollera om pjäsen nått målet
+                if (newPositionOnBoard == path.Length - 1)
                 {
-                    if (occupierC == 5 && occupierR == 5)
+                    players[playerIndex].SetTokenPosition(tokenIndex, 99); // Markera att pjäsen är i mål
+                    HandlePlayerGoal(playerIndex, tokenIndex); // Kontrollera om spelaren har vunnit
+                }
+
+                // Flytta pjäsen visuellt
+                playerToken = GetPlayerToken(playerIndex, tokenIndex);
+                var (newRow, newCol) = path[newPositionOnBoard];
+                SetTokenPosition(playerToken, newRow, newCol);
+                CheckForOverlappingTokens(playerIndex, tokenIndex);
+
+                ResetTokenEffects(playerToken);
+            }
+
+            ApplyFadeInAnimation(playerToken);
+        }
+        private void CheckForOverlappingTokens(int playerIndex, int tokenIndex)
+        {
+            // Get the Grid.Row and Grid.Column of the moved token
+            Grid movedTokenGrid = GetPlayerToken(playerIndex, tokenIndex);
+            int movedTokenRow = Grid.GetRow(movedTokenGrid);
+            int movedTokenCol = Grid.GetColumn(movedTokenGrid);
+
+            // Loop through all other players to check if any token is on the same grid location
+            for (int otherPlayerIndex = 0; otherPlayerIndex < players.Length; otherPlayerIndex++)
+            {
+                if (otherPlayerIndex == playerIndex) continue; // Skip checking the current player's own tokens
+
+                // Loop through the tokens of the other player
+                for (int otherTokenIndex = 0; otherTokenIndex < 4; otherTokenIndex++)
+                {
+                    Grid otherTokenGrid = GetPlayerToken(otherPlayerIndex, otherTokenIndex);
+                    int otherTokenRow = Grid.GetRow(otherTokenGrid);
+                    int otherTokenCol = Grid.GetColumn(otherTokenGrid);
+
+                    // Compare the grid positions of both tokens
+                    if (movedTokenRow == otherTokenRow && movedTokenCol == otherTokenCol)
                     {
-                        break;
+                        // Exclude the goal position (5, 5) from knockouts
+                        if (movedTokenRow == 5 && movedTokenCol == 5)
+                        {
+                            continue; // Skip knockout for tokens in the goal position
+                        }
+
+                        // Push the other player's token back to the nest
+                        players[otherPlayerIndex].SetTokenPosition(otherTokenIndex, -1); // -1 means back to the nest
+                        players[otherPlayerIndex].PiecesInNest++; // Increment the opponent's PiecesInNest count
+
+                        // Remove the token from the board visually
+                        ApplyFadeOutAnimation(otherTokenGrid);
+                        RepopulateNest(otherPlayerIndex, otherTokenIndex);
+
+                        // Optionally, display a message about the knockout
+                        DiceRollResult.Text = $"{IndexToName(playerIndex)} knocked out {IndexToName(otherPlayerIndex)}'s piece!";
+
+                        // Break out after knocking out one piece
+                        return;
                     }
-
-                    Debug.WriteLine("Duplicate position found!");
-                    Debug.WriteLine($"{playerR} {playerC} == {occupierR} {occupierC}");
-
-                    // Set other player piece to 0
-                    var p = GetPlayerPath(i);
-                    var (nr, nc) = p[0];
-                    SetTokenPosition(GetPlayerToken(i), nr, nc);
-                    players[i].Position = 0;
                 }
             }
+        }
+        private void RepopulateNest(int playerIndex, int tokenIndex)
+        {
+            // Get the player token visually
+            Grid playerToken = GetPlayerToken(playerIndex, tokenIndex);
 
-            // Move the player token to the new position
-            Grid playerToken = GetPlayerToken(playerIndex);
-            var (newRow, newCol) = path[position];
-            SetTokenPosition(playerToken, newRow, newCol);
-            if (newRow == 5 && newCol == 5)
+            // Use the existing nest coordinates from the player grid positions
+            switch (playerIndex)
             {
-                HandlePlayerGoal(playerIndex); // Call the goal function when reaching (5,5)
+                case 0: // Red player
+                    if (tokenIndex == 0) SetTokenPosition(playerToken, 0, 0);
+                    if (tokenIndex == 1) SetTokenPosition(playerToken, 0, 1);
+                    if (tokenIndex == 2) SetTokenPosition(playerToken, 1, 0);
+                    if (tokenIndex == 3) SetTokenPosition(playerToken, 1, 1);
+                    ApplyFadeInAnimation(playerToken);
+                    break;
+
+                case 1: // Blue player
+                    if (tokenIndex == 0) SetTokenPosition(playerToken, 0, 9);
+                    if (tokenIndex == 1) SetTokenPosition(playerToken, 0, 10);
+                    if (tokenIndex == 2) SetTokenPosition(playerToken, 1, 9);
+                    if (tokenIndex == 3) SetTokenPosition(playerToken, 1, 10);
+                    ApplyFadeInAnimation(playerToken);
+                    break;
+
+                case 2: // Green player
+                    if (tokenIndex == 0) SetTokenPosition(playerToken, 9, 9);
+                    if (tokenIndex == 1) SetTokenPosition(playerToken, 9, 10);
+                    if (tokenIndex == 2) SetTokenPosition(playerToken, 10, 9);
+                    if (tokenIndex == 3) SetTokenPosition(playerToken, 10, 10);
+                    ApplyFadeInAnimation(playerToken);
+                    break;
+
+                case 3: // Yellow player
+                    if (tokenIndex == 0) SetTokenPosition(playerToken, 9, 0);
+                    if (tokenIndex == 1) SetTokenPosition(playerToken, 9, 1);
+                    if (tokenIndex == 2) SetTokenPosition(playerToken, 10, 0);
+                    if (tokenIndex == 3) SetTokenPosition(playerToken, 10, 1);
+                    ApplyFadeInAnimation(playerToken);
+                    break;
             }
         }
 
-        private void HandlePlayerGoal(int playerIndex)
+
+
+        private int GetNextTokenInNest(int playerIndex)
         {
-            // You can customize this message or action based on the player's color.
-            string playerColor = IndexToName(playerIndex);
-            DiceRollResult.Text = $"Player {playerColor} has reached the goal!";
-
-            // You can add additional actions like disabling the player's movements, ending the game, etc.
-            TimeSpan elapsedTime = DateTime.Now - startTime;
-            string formattedTime = string.Format("{0}:{1:D2}", (int)elapsedTime.TotalMinutes, elapsedTime.Seconds);
-
-            if (!players[playerIndex].HasWon)
-                PlayerScoreManager.SavePlayerScore(new PlayerScore { Name = playerColor, Moves = players[playerIndex].Moves, Time = formattedTime });
-
-            players[playerIndex].HasWon = true;
+            for (int i = 0; i < 4; i++)
+            {
+                if (players[playerIndex].GetTokenPosition(i) == -1)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
+
+        private int GetNextTokenOnBoard(int playerIndex)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                int tokenPosition = players[playerIndex].GetTokenPosition(i);
+                if (tokenPosition != -1 && tokenPosition != 99)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+		private int PacesToMoveBack(int position, int pathLength, int steps)
+		{
+			int pacesToGoal = (pathLength - 1) - position;
+			int moveBackPaces = (position + steps) - (pathLength - 1);
+			return moveBackPaces - pacesToGoal; // Returns the amount of paces to go back if larger than paces to goal
+		}
+        private void HandlePlayerGoal(int playerIndex, int tokenIndex)
+        {
+            // Hämta färgnamnet för spelaren
+            string playerColor = IndexToName(playerIndex);
+
+            // Uppdatera resultattexten för att visa att spelaren nått målet
+            DiceRollResult.Text = $"Player {playerColor} has reached the goal with one of their pieces!";
+
+            // Markera pjäsen som i mål genom att sätta positionen till 99
+            players[playerIndex].SetTokenPosition(tokenIndex, 99);
+
+            // Kontrollera om alla pjäser för spelaren är i mål
+            if (players[playerIndex].AllPiecesInGoal())
+            {
+                // Om alla pjäser är i mål, markera att spelaren har vunnit
+                players[playerIndex].HasWon = true;
+
+                // Uppdatera resultattexten för att visa att spelaren har vunnit spelet
+                DiceRollResult.Text += $" {playerColor} has won the game!";
+                // Spela upp vinst ljudet
+                SoundManager.PlaySound(SoundType.Win);
+
+                // Här kan du lägga till logik för att avsluta spelet eller visa ett popup-meddelande om vinsten
+                // Exempelvis kan du lägga till en ContentDialog för att meddela att spelet är över
+                var winDialog = new ContentDialog
+                {
+                    Title = "Game Over",
+                    Content = $"Congratulations! {playerColor} has won the game!",
+                    CloseButtonText = "OK"
+                };
+
+                // Visa vinstdialogen
+                _ = winDialog.ShowAsync();
+            }
+        }
+
 
         private string IndexToName(int index)
         {
             switch (index)
             {
-                case 0: return "Red"; // Red player
-                case 1: return "Blue"; // Blue player
-                case 2: return "Green"; // Green player
-                case 3: return "Yellow"; // Yellow player
+                case 0: return "Red";
+                case 1: return "Blue";
+                case 2: return "Green";
+                case 3: return "Yellow";
                 default: return null;
             }
         }
 
-        private Grid GetPlayerToken(int playerIndex)
+        private Grid GetPlayerToken(int playerIndex, int tokenIndex)
         {
             switch (playerIndex)
             {
-                case 0: return Player1Token; // Red player
-                case 1: return Player2Token; // Blue player
-                case 2: return Player3Token; // Green player
-                case 3: return Player4Token; // Yellow player
-                default: return null;
+                case 0:
+                    switch (tokenIndex)
+                    {
+                        case 0: return Player1Token;
+                        case 1: return Player1Token2;
+                        case 2: return Player1Token3;
+                        case 3: return Player1Token4;
+                    }
+                    break;
+                case 1:
+                    switch (tokenIndex)
+                    {
+                        case 0: return Player2Token;
+                        case 1: return Player2Token2;
+                        case 2: return Player2Token3;
+                        case 3: return Player2Token4;
+                    }
+                    break;
+                case 2:
+                    switch (tokenIndex)
+                    {
+                        case 0: return Player3Token;
+                        case 1: return Player3Token2;
+                        case 2: return Player3Token3;
+                        case 3: return Player3Token4;
+                    }
+                    break;
+                case 3:
+                    switch (tokenIndex)
+                    {
+                        case 0: return Player4Token;
+                        case 1: return Player4Token2;
+                        case 2: return Player4Token3;
+                        case 3: return Player4Token4;
+                    }
+                    break;
             }
+            return null;
         }
 
         private (int row, int col)[] GetPlayerPath(int playerIndex)
         {
             switch (playerIndex)
             {
-                case 0: return RedPath; // Red path
-                case 1: return BluePath; // Blue path
-                case 2: return GreenPath; // Green path
-                case 3: return YellowPath; // Yellow path
+                case 0: return RedPath;
+                case 1: return BluePath;
+                case 2: return GreenPath;
+                case 3: return YellowPath;
                 default: return null;
             }
         }
 
-        // Method to move the player's token on the grid
         private void SetTokenPosition(Grid token, int row, int col)
         {
-            // Set the player's token to the new row and column
             Grid.SetRow(token, row);
             Grid.SetColumn(token, col);
         }
@@ -289,6 +1099,9 @@ namespace FiaMedKnuff
         private void Back_to_MainMenu(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainMenu));
+
+            // Kill game incase 4 AI's selected, otherwise task will be in background
+            stopGame = true;
         }
     }
 }
