@@ -51,10 +51,10 @@
                 </Button>
 
                 <!-- Blue player start zone -->
-                <Ellipse Grid.Row="0" Grid.Column="9" Width="50" Height="50" Fill="Blue"/>
-                <Ellipse Grid.Row="0" Grid.Column="10" Width="50" Height="50" Fill="Blue"/>
-                <Ellipse Grid.Row="1" Grid.Column="9" Width="50" Height="50" Fill="Blue"/>
-                <Ellipse Grid.Row="1" Grid.Column="10" Width="50" Height="50" Fill="Blue"/>
+                <Ellipse Grid.Row="0" Grid.Column="9" Width="50" Height="50" Fill="#FF0066FF"/>
+                <Ellipse Grid.Row="0" Grid.Column="10" Width="50" Height="50" Fill="#FF0066FF"/>
+                <Ellipse Grid.Row="1" Grid.Column="9" Width="50" Height="50" Fill="#FF0066FF"/>
+                <Ellipse Grid.Row="1" Grid.Column="10" Width="50" Height="50" Fill="#FF0066FF"/>
                 <!-- dice for Blue-->
                 <Button x:Name="BlueDiceBtn" Click="RollDice_Click" Grid.Row="2" Grid.Column="7" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="Transparent" Width="Auto" Height="Auto" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Grid >
@@ -281,7 +281,7 @@
 
         <!-- Temp: Result text -->
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,10,0,0">
-            <TextBlock x:Name="DiceRollResult" FontSize="24" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="DiceRollResult" FontSize="24" HorizontalAlignment="Center" FocusVisualPrimaryBrush="#FFF1F1F1" Foreground="#FFE8E8E8"/>
         </StackPanel>
 
 

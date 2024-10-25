@@ -126,6 +126,7 @@ namespace FiaMedKnuff.UserControls
             var textBlock = new TextBlock
             {
                 Text = $"Player {playerNumber + 1}",
+                Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255)),
                 FontSize = 24,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Top,
