@@ -10,6 +10,9 @@ using System.Diagnostics;
 
 namespace FiaMedKnuff
 {
+    /// <summary>
+    /// Represents the different types of sounds that can be played in the game.
+    /// </summary>
     public enum SoundType
     {
         Win,
@@ -19,13 +22,18 @@ namespace FiaMedKnuff
         Error
     }
 
+    /// <summary>
+    /// Manages sound playback for the game.
+    /// </summary>
     public static class SoundManager
     {
         public static bool SoundEnabled { get; set; } = true;
         private static readonly Dictionary<SoundType, string> soundMap;
         private static readonly MediaPlayer mediaPlayer;
 
-        // initialize soundmap and mediaplayer
+        /// <summary>
+        /// Initializes the <see cref="SoundManager"/> class, setting up the sound map and media player.
+        /// </summary>
         static SoundManager()
         {
             mediaPlayer = new MediaPlayer();
@@ -39,7 +47,10 @@ namespace FiaMedKnuff
             };
         }
 
-        // method to play audio with soundtype
+        /// <summary>
+        /// Plays the specified sound based on the <see cref="SoundType"/>.
+        /// </summary>
+        /// <param name="soundType">The type of sound to play.</param>
         public static void PlaySound(SoundType soundType)
         {
             if (!SoundEnabled)

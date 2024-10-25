@@ -16,10 +16,10 @@ namespace FiaMedKnuff
         public string Name { get; set; }
         public int Position { get; set; }
         public bool HasWon { get; set; }
-        public bool HasStarted { get; set; } // Indicates if at least one piece has started
+        public bool HasStarted { get; set; }//Indicates if at least one piece has started
         public int Moves { get; set; }
-        public int PiecesInNest { get; set; } // Number of pieces still in the nest
-        private int[] tokenPositions; // Array to store the positions of the player's 4 tokens
+        public int PiecesInNest { get; set; }//Number of pieces still in the nest
+        private int[] tokenPositions;//Array to store the positions of the player's 4 tokens
 
         /// <summary>
         /// Initializes a new player with the specified name.
@@ -29,14 +29,14 @@ namespace FiaMedKnuff
         {
             Name = name;
             HasWon = false;
-            HasStarted = false; // No pieces have started initially
-            PiecesInNest = 4; // All 4 pieces start in the nest
-            tokenPositions = new int[4]; // Initialize positions for all 4 tokens
+            HasStarted = false;//No pieces have started initially
+            PiecesInNest = 4;//All 4 pieces start in the nest
+            tokenPositions = new int[4];//Initialize positions for all 4 tokens
 
-            // Set all token positions to -1 (indicating they are in the nest)
+            //Set all token positions to -1 (indicating they are in the nest)
             for (int i = 0; i < tokenPositions.Length; i++)
             {
-                tokenPositions[i] = -1; // -1 indicates the token is in the nest
+                tokenPositions[i] = -1;//-1 indicates the token is in the nest
             }
         }
 
@@ -47,7 +47,7 @@ namespace FiaMedKnuff
         public void Move(int steps)
         {
             Position += steps;
-            // Add logic to handle the game board, player knockout, and finishing the game
+            //Add logic to handle the game board, player knockout, and finishing the game
         }
 
         /// <summary>
@@ -57,24 +57,24 @@ namespace FiaMedKnuff
         {
             if (PiecesInNest > 0)
             {
-                PiecesInNest--; // Decrease the number of pieces in the nest
-                SetTokenPosition(tokenIndex, 0); // Move the token to the start position
-                HasStarted = true; // Mark that the player has started
+                PiecesInNest--;//Decrease the number of pieces in the nest
+                SetTokenPosition(tokenIndex, 0);//Move the token to the start position
+                HasStarted = true;//Mark that the player has started
             }
         }
         public bool HasPiecesOnBoard
         {
             get
             {
-                // Loop through each token and check if any are on the board (not in the nest and not in the goal)
+                //Loop through each token and check if any are on the board (not in the nest and not in the goal)
                 for (int i = 0; i < tokenPositions.Length; i++)
                 {
-                    if (tokenPositions[i] >= 0 && tokenPositions[i] < 99) // On the board if position is between 0 and the goal
+                    if (tokenPositions[i] >= 0 && tokenPositions[i] < 99)//On the board if position is between 0 and the goal
                     {
                         return true;
                     }
                 }
-                return false; // No pieces are on the board
+                return false;//No pieces are on the board
             }
         }
 
@@ -88,24 +88,24 @@ namespace FiaMedKnuff
 
             for (int i = 0; i < tokenPositions.Length; i++)
             {
-                if (tokenPositions[i] == -1 || tokenPositions[i] == 99) // Token is in nest or goal
+                if (tokenPositions[i] == -1 || tokenPositions[i] == 99)//Token is in nest or goal
                 {
                     piecesInGoalOrNest++;
                 }
             }
 
-            return piecesInGoalOrNest == 4; // If all 4 pieces are in nest or goal
+            return piecesInGoalOrNest == 4;//If all 4 pieces are in nest or goal
         }
         public bool AllPiecesInGoal()
         {
             for (int i = 0; i < tokenPositions.Length; i++)
             {
-                if (tokenPositions[i] != 99) // If any token is not in the goal
+                if (tokenPositions[i] != 99)//If any token is not in the goal
                 {
                     return false;
                 }
             }
-            return true; // All pieces are in the goal
+            return true;//All pieces are in the goal
         }
         /// <summary>
         /// Gets the position of a specific token.
@@ -118,7 +118,7 @@ namespace FiaMedKnuff
             {
                 return tokenPositions[tokenIndex];
             }
-            return -1; // Invalid token index
+            return -1;//Invalid token index
         }
 
         /// <summary>
