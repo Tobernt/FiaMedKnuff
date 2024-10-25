@@ -130,7 +130,6 @@
     <Compile Include="Player.cs" />
     <Compile Include="PlayerScoreManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SaveLoadManager.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="UserControls\Dice.xaml.cs">
       <DependentUpon>Dice.xaml</DependentUpon>

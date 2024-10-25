@@ -14,7 +14,7 @@ namespace FiaMedKnuff
         /// <param name="steps">The number of steps to move forward.</param>
         public new void Move(int steps)
         {
-            // AI-specific logic can be added here (e.g., smarter movement strategy)
+            //AI-specific logic can be added here (e.g., smarter movement strategy)
             base.Move(steps);
         }
     }
