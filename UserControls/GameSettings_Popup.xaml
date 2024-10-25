@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Text -->
-        <TextBlock Grid.ColumnSpan="5" VerticalAlignment="Bottom" HorizontalAlignment="Center" Text="Choose number and type of players" FontSize="36"></TextBlock>
+        <TextBlock Grid.ColumnSpan="5" VerticalAlignment="Bottom" HorizontalAlignment="Center" Text="Choose number and type of players" FontSize="36" Foreground="#FFE2E2E2"></TextBlock>
         <!-- Start button -->
         <Button x:Name="StartButton" Grid.ColumnSpan="5" Grid.Row="4" Content="Start Game" Click="Game_Start" Width="200" Height="50" BorderBrush="Black" BorderThickness="2" Background="#FFD2D2D2" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="18" FontWeight="ExtraBold"/>
     </Grid>
