@@ -236,3 +236,29 @@ obj/x86/Debug/MainPage.xbf
 obj/x86/Debug/unfiltered.layout.resfiles
 obj/x86/Debug/unfiltered.layout.resfiles.intermediate
 obj/x86/Debug/XamlSaveStateFile.xml
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+credentials.json
+secrets.json
+
+# Local build and editor files
+.vs/
+.idea/
+*.user
+*.suo
+*.log
+
+bin/
+obj/
+AppPackages/
+BundleArtifacts/

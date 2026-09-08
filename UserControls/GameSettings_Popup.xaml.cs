@@ -12,8 +12,6 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 using static FiaMedKnuff.Player;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace FiaMedKnuff.UserControls
 {
     public sealed partial class GameSettings_Popup : UserControl
@@ -226,7 +224,7 @@ namespace FiaMedKnuff.UserControls
             DisableStart(PlayerAmountCheck(), StartButton);
 		}
 
-		// TODO: Go to MainPage window with players from dictionary
+		// Start a game with the selected player types.
 		private void Game_Start(object sender, RoutedEventArgs e)
 		{
             bool playerAmountCorrect = false;
@@ -251,7 +249,7 @@ namespace FiaMedKnuff.UserControls
 			}
             else
             {
-                //Annat meddelande?
+                // TODO: Show the minimum-player validation message in the interface.
                 Debug.WriteLine("Need atleast 2 players to start game");
             }
 

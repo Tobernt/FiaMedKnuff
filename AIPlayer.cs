@@ -1,20 +1,18 @@
 namespace FiaMedKnuff
 {
     /// <summary>
-    /// Class representing an AI player.
+    /// Computer player using the shared player movement rules.
     /// </summary>
     public class AIPlayer : Player
     {
         public AIPlayer(string name) : base(name) { }
 
         /// <summary>
-        /// Moves the AI player based on the dice roll.
-        /// The AI can have its own logic for decision making.
+        /// Uses the same movement rule as Player.
         /// </summary>
         /// <param name="steps">The number of steps to move forward.</param>
         public new void Move(int steps)
         {
-            //AI-specific logic can be added here (e.g., smarter movement strategy)
             base.Move(steps);
         }
     }

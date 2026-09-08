@@ -5,8 +5,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace FiaMedKnuff.UserControls
 {
 	public sealed partial class HighScore_Popup : UserControl

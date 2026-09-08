@@ -91,10 +91,7 @@ namespace FiaMedKnuff
 		}
 
         /// <summary>
-        /// Enables the dice button for the current player and disables the rest.
-        /// Hides all dice buttons initially and ensures that the appropriate button
-        /// is visible for the current player. Also disables token selection until
-        /// the dice is rolled.
+        /// Enables the current player's dice button and disables token selection until a roll.
         /// </summary>
         /// <param name="currentPlayerIndex">The index of the current player whose dice button should be enabled.</param>
         private void DiceIsEnable(int currentPlayerIndex)
@@ -129,9 +126,7 @@ namespace FiaMedKnuff
 		}
 
         /// <summary>
-        /// Handles the turn for a computer player, including rolling the dice, 
-        /// moving pieces based on the rolled value, and managing turn transitions 
-        /// between players. It recursively handles consecutive turns for computer players.
+        /// Rolls and moves for computer players, continuing through consecutive computer turns.
         /// </summary>
         /// <returns>A task representing the asynchronous operation.</returns>
         private async Task HandleComputerTurn()
@@ -222,8 +217,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Handles the event when the dice button is clicked, including rolling the dice, 
-        /// updating player states, and managing token movement based on the rolled value.
+        /// Rolls the dice and updates the available moves.
         /// </summary>
         /// <param name="sender">The object that initiated the event.</param>
         /// <param name="e">The event data associated with the click event.</param>
@@ -416,8 +410,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Checks the last rolled dice value and either allows the current player to roll again if it was a 6, 
-        /// or passes the turn to the next player if it was not.
+        /// Keeps the turn after a six; otherwise advances to the next player.
         /// </summary>
         private void PassTurnOrEnableRollForSix()
         {
@@ -513,9 +506,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Called when the page becomes active and is about to be displayed to the user.
-        /// Initializes the players based on the types received from the game settings
-        /// and sets the current player to a random player, ensuring they are of type Player.
+        /// Loads player types from the settings page and chooses a human player to start.
         /// </summary>
         /// <param name="e">The event data containing navigation parameters.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -559,9 +550,7 @@ namespace FiaMedKnuff
 		}
 
         /// <summary>
-        /// Highlights the selected token by applying a new stroke thickness and adding a drop shadow.
-        /// This method is designed to modify the visual appearance of a token when it is tapped,
-        /// making it clear to the player which token is currently selected.
+        /// Highlights the selected token with a thicker outline and drop shadow.
         /// </summary>
         /// <param name="tokenGrid">The Grid element representing the token that is selected.</param>
         private void HighlightSelectedToken(Grid tokenGrid)
@@ -583,8 +572,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Adds a drop shadow effect to the specified target element (Grid).
-        /// The shadow enhances the visual appearance of the element, making it stand out.
+        /// Adds a drop shadow to a token grid.
         /// </summary>
         /// <param name="targetElement">The Grid element to which the drop shadow will be applied.</param>
         private void AddDropShadow(Grid targetElement)
@@ -615,8 +603,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Resets visual effects on the specified token element (Grid).
-        /// This method removes any applied shadow effects and resets the stroke thickness of the token's visual representation.
+        /// Removes the token's shadow and resets its outline.
         /// </summary>
         /// <param name="tokenGrid">The Grid element representing the token whose effects will be reset.</param>
         private void ResetTokenEffects(Grid tokenGrid)
@@ -638,8 +625,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Handles the selection of a chosen token by adding tap event handlers to each player's token.
-        /// This method is called when a player needs to select a token for movement.
+        /// Attaches tap handlers for token selection.
         /// </summary>
         /// <param name="sender">The source of the event, typically the UI element that was tapped.</param>
         /// <param name="e">Event data containing the details of the tap event.</param>
@@ -657,8 +643,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Handles the event when a player taps on a token. This method checks if the tapped token belongs to the 
-        /// current player and processes the token movement based on the game's rules.
+        /// Processes a tapped token when it belongs to the current player.
         /// </summary>
         /// <param name="sender">The source of the event, typically the token that was tapped.</param>
         /// <param name="e">Event data containing the details of the tap event.</param>
@@ -718,9 +703,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Deselects all tokens on the board by resetting their visual effects. 
-        /// This method ensures that no tokens are highlighted after a move or when 
-        /// the player needs to make a new selection.
+        /// Clears token highlights after a move or before a new selection.
         /// </summary>
         private void DeselectAllTokens()
         {
@@ -740,11 +723,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Passes the turn to the next player in the game. 
-        /// This method increments the current player index, 
-        /// resets the dice roll, and skips any players that are inactive 
-        /// (of type None). If the next player is a computer, it automatically 
-        /// handles their turn.
+        /// Advances past inactive players, resets the dice, and starts a computer turn when needed.
         /// </summary>
         private void PassTurnToNextPlayer()
         {
@@ -794,8 +773,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Disables the ability to tap on all tokens for all players. 
-        /// This prevents any token movements until re-enabled.
+        /// Disables token selection for every player.
         /// </summary>
         private void DisableTokenSelection()
         {
@@ -820,7 +798,7 @@ namespace FiaMedKnuff
         }
 
         /// <summary>
-        /// Enables the dice button for the current player, allowing them to roll the dice again.
+        /// Enables the current player's dice button and disables token selection until a roll.
         /// </summary>
         private void EnableDiceForCurrentPlayer()
         {

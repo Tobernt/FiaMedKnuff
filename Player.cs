@@ -1,7 +1,7 @@
 namespace FiaMedKnuff
 {
     /// <summary>
-    /// Class representing a player.
+    /// Player state and board-token positions.
     /// </summary>
     public class Player
     {
